@@ -5,7 +5,7 @@ const auth = (req, res, next) => {
     User.findByToken(token, (err, user) => {
         if (err || !user) {
             res.status(400).json({
-                err: 'Something went wrong'
+                err: 'You are not currently login'
             })
         }
 

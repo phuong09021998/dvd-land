@@ -34,10 +34,6 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 6
     },
-    photo: {
-        data: Buffer,
-        contentType: String
-    },
     history: [{
         item: {
             type: ObjectId,

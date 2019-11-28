@@ -50,14 +50,14 @@ exports.loginUser = (req, res) => {
 
 
 exports.updateUser = (req, res) => {
-    User.updateOne({_id: req.user._id}, req.body, (err, user) => {
+    User.findOneAndUpdate({_id: req.user._id}, req.body, {new: true} ,(err, user) => {
         if (err || !user) {
             res.status(400).json({
                 err: 'User cannot be found'
             })
         }
 
-        res.status(200).json({success: true})
+        res.status(200).json({user})
     })
 }
 
