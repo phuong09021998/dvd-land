@@ -11,7 +11,7 @@ const adminRoutes = require('./routes/admin')
 const userRoutes = require('./routes/user')
 const productRoutes = require('./routes/porduct')
 const genreRoutes = require('./routes/genre')
-const featureRoutes = require('./routes/features')
+const featureRoutes = require('./routes/feature')
 
 // App
 const app = express()
