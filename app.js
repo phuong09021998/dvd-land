@@ -9,7 +9,7 @@ require('dotenv').config()
 // Import routes
 const adminRoutes = require('./routes/admin')
 const userRoutes = require('./routes/user')
-const productRoutes = require('./routes/porduct')
+const productRoutes = require('./routes/product')
 const genreRoutes = require('./routes/genre')
 const featureRoutes = require('./routes/feature')
 

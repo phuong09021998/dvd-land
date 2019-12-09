@@ -37,7 +37,11 @@ const userSchema = new mongoose.Schema({
     history: [{
         item: {
             type: ObjectId,
-            ref: 'Product'
+            ref: 'Product',
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now()
         }
     }],
     cart: [{
@@ -60,12 +64,6 @@ const userSchema = new mongoose.Schema({
     address: {
         type: String,
     },
-    wishList: [{
-        item: {
-            type: ObjectId,
-            ref: 'Product'
-        }
-    }],
     token: {
         type: String,
     }

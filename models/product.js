@@ -24,16 +24,16 @@ const productSchema = new mongoose.Schema({
     },
     photo: {
         data: Buffer,
-        contenType: String
+        contentType: String
     },
     description: {
         type: String,
         required: true
     },
-    category: {
+    genre: {
         type: ObjectId,
         required: true,
-        ref: 'Category'
+        ref: 'Genre'
     },
     director: {
         type: String,
