@@ -18,10 +18,6 @@ const productSchema = new mongoose.Schema({
             }
         }
     },
-    country: {
-        type: String,
-        required: true
-    },
     photo: {
         data: Buffer,
         contentType: String
@@ -35,14 +31,23 @@ const productSchema = new mongoose.Schema({
         required: true,
         ref: 'Genre'
     },
+    country: {
+        type: ObjectId,
+        required: true,
+        ref: 'Country'
+    },
     director: {
         type: String,
         required: true,
         trim: true
     },
-    sale: {
+    sold: {
         type: Number,
-        default: 0,
+        default: 0
+    },
+    price: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true

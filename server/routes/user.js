@@ -11,4 +11,5 @@ router.patch('/user/update', auth, updateUser)
 router.delete('/user/delete', auth, deleteUser)
 router.get('/user/logout', auth, logoutUser)
 
+
 module.exports = router

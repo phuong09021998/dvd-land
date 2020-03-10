@@ -11,7 +11,7 @@ const adminRoutes = require('./routes/admin')
 const userRoutes = require('./routes/user')
 const productRoutes = require('./routes/product')
 const genreRoutes = require('./routes/genre')
-const featureRoutes = require('./routes/feature')
+const countryRouter = require('./routes/country')
 
 // App
 const app = express()
@@ -35,7 +35,7 @@ app.use('/api', adminRoutes)
 app.use('/api', userRoutes)
 app.use('/api', productRoutes)
 app.use('/api', genreRoutes)
-app.use('/api', featureRoutes)
+app.use('/api', countryRouter)
 
 
 // Listen

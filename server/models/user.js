@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const { ObjectId } = mongoose.Schema
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
@@ -34,22 +33,14 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 6
     },
-    history: [{
-        item: {
-            type: ObjectId,
-            ref: 'Product',
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now()
-        }
-    }],
-    cart: [{
-        item: {
-            type: ObjectId,
-            ref: 'Product'
-        }
-    }],
+    history: {
+        type: Array,
+        default: []
+    },
+    cart: {
+        type: Array,
+        default: []
+    },
     role: {
         type: Number,
         default: 0

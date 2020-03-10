@@ -140,6 +140,15 @@ exports.listGenre = (req, res) => {
     })
 }
 
+exports.listCountries = (req, res) => {
+    Product.distinct('country', {}, (err, countries) => {
+        if (err) {
+            return res.status(400).json(err)
+        }
+        res.json(countries)
+    })
+}
+
 exports.getPhoto = (req, res) => {
     if (req.product.photo.data) {
         res.set('Content-Type', req.product.photo.contentType);
