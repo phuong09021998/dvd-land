@@ -1,0 +1,207 @@
+* {margin: 0; padding: 0; font-family: 'Baloo Chettan 2', cursive;}
+
+
+.home {
+    height: 800px;
+    width: 100%;
+}
+
+
+/* Header */
+
+header {
+    height: 110px;
+    width: 100%;
+    background-color: #fcb800;
+}
+
+footer {
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    height: 50px;
+    background-color: #fcb800;
+}
+
+.header_container {
+    width: 1650px;
+    margin: 0 auto;
+    display: flex;
+    top: 50%;
+    position: relative;
+    transform: translateY(-50%);
+    justify-content: space-between;
+}
+
+
+.menu_item {
+    display: flex
+}
+
+.logo{
+    position: relative;
+    height: 50px;
+}
+
+.logo_group {
+    display: flex;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 50px;
+}
+
+#logo {
+    color: #DC143C;
+    font-size: 50px;
+    position: relative;
+}
+
+#logo_text {
+    font-size: 30px;
+    margin-left: 10px;
+    font-family: 'Lobster', cursive;
+    font-weight: bold;
+    color: 	#00008B
+}
+
+.search_bar {
+    width: 60%;
+}
+
+#option_search {
+    width: 20%;
+}
+
+.search_group {
+    position: relative;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+}
+
+.item_wrapp {
+    width: 20%;
+    display: flex
+}
+
+.menu_item {
+    padding: 0 20px
+}
+
+.icon {
+    font-size: 30px;
+    width: 30%;
+    display: block;
+    color: #000
+}
+.item_text {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    color: #000
+}
+
+#button_search {
+    color: white;
+    font-weight: bold;
+    background-color: #000;
+    font-size: 16px;
+}
+
+
+/* Footer */
+
+.footer_left, .footer_middle_text {
+    font-size: 16px;
+    color: black
+}
+
+.footer_right img {
+    padding: 0 10px;
+}
+
+
+/* Login Register */
+
+.login_register_wrapp {
+    height: 1000px;
+    width: 100%;
+    background-color: #f1f1f1;
+}
+
+.login_title {
+    font-weight: bold;
+    text-align: center;
+    padding-top: 100px;
+    font-size: 40px;
+}
+
+.login_subtitle {
+    padding: 0 20px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 35px;
+    cursor: pointer;
+}
+
+.title_wrapp {
+    width: 300px;
+    margin: auto;
+}
+
+#login_active {
+    color: black;
+}
+
+.login_wrapp {
+    width: 430px;
+    background: white;
+    height: auto;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.formtitle {
+    padding-top: 20px;
+    text-align: center;
+    font-size: 20px;
+    color: #000;
+}
+
+.input_field {
+    width: 80%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    height: 40px;
+    padding: 10px;
+    background-color: transparent;
+    border: 1px solid #d9d9d9
+}
+/* Change the white to any color ;) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+.formBlock {
+    padding: 10px 0;
+}
+
+.login_button {
+    border: none;
+    border-radius: 5px;
+    color: black;
+    background-color: #fcb800;
+    width: 80%;
+    height: 50px;
+    left: 50%;
+    position: relative;
+    transform: translateX(-50%);
+    margin-bottom: 50px;
+    font-size: 20px;
+}
