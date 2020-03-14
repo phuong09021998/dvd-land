@@ -1,11 +1,27 @@
 
-export const validate = (element, formData=[]) => {
+
+export const validate =  (element, formData=[]) => {
     let error = [true, '']
 
     if(element.validation.email){
         const valid = /\S+@\S+\.\S+/.test(element.value)
         const message = `${!valid ? 'Must be a valid email':''}`;
         error = !valid ? [valid,message] : error;
+        
+       
+    }
+
+    if(element.validation.password){
+        const valid = element.value.length >= 6
+        const message = `${!valid ? 'Password must be greater than 6 characters':''}`;
+        error = !valid ? [valid,message] : error;
+    }
+
+
+    if(element.validation.confirm) {
+        const valid = element.value === formData[element.validation.confirm].value
+        const message = `${!valid ? 'Passwords do not match':''}`
+        error = !valid ? [valid, message] : error;
     }
 
     if(element.validation.required){
@@ -33,8 +49,6 @@ export const update = (element, formData, formName) => {
         let validData = validate(newElement, formData)
         newElement.valid = validData[0]
         newElement.validationMessage = validData[1]
-        // console.log(newElement.valid)
-        // console.log(newElement.validationMessage)
     }
 
     newElement.touched = element.blur

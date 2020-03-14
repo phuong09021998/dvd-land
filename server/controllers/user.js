@@ -85,3 +85,18 @@ exports.logoutUser = (req, res) => {
         })
     })
 }
+
+exports.checkUser = (req, res) => {
+    const email =  req.body.email
+
+    User.findOne({email}, (err, user) => {
+        if (err || !user) {
+            return res.status(400).json({err})
+            
+        }
+
+        res.status(200).json({
+            success: true
+        })
+    })
+}
