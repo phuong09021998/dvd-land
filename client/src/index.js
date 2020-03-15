@@ -10,13 +10,16 @@ import ReduxThunk from 'redux-thunk'
 import Reducer from './reducers'
 import { BrowserRouter } from 'react-router-dom';
 
+
+
+
 const createStoreWithMiddleWare = applyMiddleware(promiseMiddleWare, ReduxThunk)(createStore)
 
 
+
 ReactDOM.render(
-    <Provider store={createStoreWithMiddleWare(Reducer , window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())}>
-        <BrowserRouter>
-            <Routes/>
-        </BrowserRouter>
-    </Provider>
-, document.getElementById('root'));
+<Provider store={createStoreWithMiddleWare(Reducer , window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())}>
+    <BrowserRouter>
+        <Routes />
+    </BrowserRouter>
+</Provider>, document.getElementById('root'));

@@ -22,3 +22,22 @@ export const registerUser = (dataToSubmit) => {
             payload: request
         }
 }
+
+
+export const getUser = () => {
+    const request = axios.get(`${USER_SERVER}`)
+        .then(res => res.data)
+        return {
+            type: 'get_user',
+            payload: request
+        }
+}
+
+export const logoutUser = () => {
+    const request = axios.get(`${USER_SERVER}/logout`)
+        .then(res => res.data)
+        return {
+            type: 'logout_user',
+            payload: request
+        }
+}

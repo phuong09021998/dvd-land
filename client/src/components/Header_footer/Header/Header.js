@@ -1,14 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input, Select, Button } from 'antd'
 import Items from './Items'
-import {Link} from 'react-router-dom'
-
-const { Option } = Select
-const InputGroup = Input.Group
-
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { getGenre } from '../../../actions/genre_action'
 
 
-export default function Header() {
+
+function Header(props) {
 
     const listItem = [
         {
@@ -26,6 +25,74 @@ export default function Header() {
         }
     ]
 
+    const listItemUser = [
+        {
+            icon: <i class="fas fa-store-alt"></i>,
+            link: '/shop'
+        },
+        {
+            icon: <i class="fas fa-shopping-cart"></i>,
+            link: '/cart'
+        },
+        {
+            icon: <i class="far fa-user"></i>,
+            link: '/user/dashboard',
+            hover: true,
+            hover_setting: [
+                {
+                    text: `Hello, ${props.user ? props.user.name : ''}`,
+                    name: true,
+                    title: true
+                },
+                {
+                    text: 'Dashboard',
+                    link: '/user/dashboard'
+                },
+                {
+                    text: 'Order History',
+                    link: '/user/order'
+                },
+                {
+                    text: 'Account Setting',
+                    link: '/user/setting'
+                }
+            ]
+        },
+        {
+            icon: <i class="fas fa-sign-out-alt"></i>,
+            text: 'Logout',
+            logout: true
+        }
+    ]
+
+    const [searchValue, setSearchValue] = useState({
+        key: '',
+        genre: ''
+    })
+
+    useEffect(() => {
+        props.dispatch(getGenre())
+    }, [])
+
+    const handleSearchInput = (e) => {
+        setSearchValue({
+            ...searchValue,
+            key: e.target.value
+        })
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        console.log(searchValue)
+    }
+
+    const handleSelect = (e) => {
+        setSearchValue({
+            ...searchValue,
+            genre: e.target.value
+        })
+    }
+
     return (
         <header>
             <div className="header_container">
@@ -37,19 +104,21 @@ export default function Header() {
                 </div>
                 <div className="search_bar">
                     <div className="search_group">
-                        <InputGroup compact size="large">
-                            <Select defaultValue="Option1" id="option_search"  size="large">
-                                <Option value="Option1">Option1</Option>
-                                <Option value="Option2">Option2</Option>
-                            </Select>
-                            <Input style={{ width: '80%' }} placeholder="I'm shopping for..." />
-                            <Button size="large" type="primary" id="button_search">Search</Button>
-                        </InputGroup>
+                        <form type="POST" onSubmit={e => handleSubmit(e)} className="search_bar_form">
+                            <select id="search_bar" onChange={e => handleSelect(e)} className="select_search">
+                                <option value="">All</option>
+                                {props.genre ? props.genre.map((item, i) => (
+                                    <option value={item._id}>{item.name}</option>
+                                )) : null}
+                            </select>
+                            <input type="text" onChange={e => handleSearchInput(e)} className="input_search" placeholder="I'm searching for..."/>
+                            <button onClick={e => handleSubmit(e)} className="button_search">Search</button>
+                        </form>
                     </div>
                 </div>
                 <div className="item_wrapp">
                     <Items 
-                        data={listItem}
+                        data={props.user ? listItemUser : listItem}
                     />
                 </div>
             </div>
@@ -57,3 +126,11 @@ export default function Header() {
         </header>
     )
 }
+
+const mapStateToProps = (state) => {
+    return {
+        genre: state.genre.genres
+    }
+}
+
+export default connect(mapStateToProps)(Header)

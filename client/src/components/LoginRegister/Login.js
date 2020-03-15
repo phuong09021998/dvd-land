@@ -88,7 +88,7 @@ const Login = (props) => {
         <div className="login_wrapp">
             
             <form onSubmit={(e) => handleLoginSubmit(e)} type="POST">
-                <p className="formtitle">Register an account</p>
+                <p className="formtitle">Login your account</p>
                 <FormField 
                     id={'email'}
                     formdata={loginForm.formData.email}
