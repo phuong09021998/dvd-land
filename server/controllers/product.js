@@ -18,7 +18,12 @@ exports.createProduct = (req, res) => {
 
         
         let product = new Product(fields)
-
+        genres = fields.genre.split(",")
+        genres.map((item, i) => {
+            product.genre = product.genre.concat({item})
+        })
+        console.log(fields)
+        console.log('Product', product)
 
         if (file.photo) {
             if (file.photo.size > 1000000) {
@@ -29,7 +34,6 @@ exports.createProduct = (req, res) => {
         }
         
 
-        
 
         product.save((err, product) => {
             if (err) {

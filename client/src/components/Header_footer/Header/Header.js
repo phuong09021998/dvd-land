@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Input, Select, Button } from 'antd'
 import Items from './Items'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getGenre } from '../../../actions/genre_action'
+import { getCountry } from '../../../actions/country_action'
 
 
 
@@ -72,6 +72,7 @@ function Header(props) {
 
     useEffect(() => {
         props.dispatch(getGenre())
+        props.dispatch(getCountry())
     }, [])
 
     const handleSearchInput = (e) => {
@@ -108,7 +109,7 @@ function Header(props) {
                             <select id="search_bar" onChange={e => handleSelect(e)} className="select_search">
                                 <option value="">All</option>
                                 {props.genre ? props.genre.map((item, i) => (
-                                    <option value={item._id}>{item.name}</option>
+                                    <option value={item._id} key={i}>{item.name}</option>
                                 )) : null}
                             </select>
                             <input type="text" onChange={e => handleSearchInput(e)} className="input_search" placeholder="I'm searching for..."/>

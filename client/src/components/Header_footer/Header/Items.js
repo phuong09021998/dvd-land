@@ -40,13 +40,14 @@ function Items(props) {
         <Menu className="dropdown_menu">
             {setting.map((item, i) => (
                 item.title ?
-                    <p className="user_title">{item.text}</p>
-                : <Menu.Item>
-                    <Link to={item.link} className="dropdown_item">
+                    <p className="user_title" key={i}>{item.text}</p>
+                : <Menu.Item key={i}>
+                    <Link to={item.link} className="dropdown_item" key={i}>
                         {item.text}
                     </Link>
                 </Menu.Item>
             ))}
+            <br/>
         </Menu>
     )
 
@@ -55,11 +56,11 @@ function Items(props) {
             item.hover ? 
             (
 
-                <Dropdown overlay={menu(item.hover_setting)}>
-                    <Link className="menu_item" key={i} to={item.link} onClick={e => handleClick({ e, item })}>
-                        <div className="icon">{item.icon}</div>
+                <Dropdown overlay={menu(item.hover_setting)} key={i}>
+                    <Link className="menu_item" key={i} to={item.link ? item.link : '#'} onClick={e => handleClick({ e, item })}>
+                        <div className="icon" key={i}>{item.icon}</div>
                         {item.text ?
-                            <div className="item_text">
+                            <div className="item_text" key={i}>
                                 {item.text}
                             </div>
                         : null}

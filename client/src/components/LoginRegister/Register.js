@@ -134,8 +134,8 @@ const Register = (props) => {
     const handleRegisterSubmit = (e) => {
         e.preventDefault()
 
-        let dataToSubmit = generateData(registerForm.formData, 'login')
-        let formIsValid = isFormValid(registerForm.formData, 'login')
+        let dataToSubmit = generateData(registerForm.formData, 'register')
+        let formIsValid = isFormValid(registerForm.formData, 'register')
 
         if (formIsValid) {
             props.dispatch(registerUser(dataToSubmit)).then(response =>{

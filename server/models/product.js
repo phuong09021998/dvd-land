@@ -26,11 +26,13 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    genre: {
-        type: ObjectId,
-        required: true,
-        ref: 'Genre'
-    },
+    genre: [{
+        item: {
+            type: ObjectId,
+            require: true,
+            ref: 'Genre'
+        }
+    }],
     country: {
         type: ObjectId,
         required: true,
@@ -48,6 +50,14 @@ const productSchema = new mongoose.Schema({
     price: {
         type: Number,
         default: 0
+    },
+    fixed_price: {
+        type: Number,
+        default: 0
+    },
+    trailer: {
+        type: String,
+        required: true,
     }
 }, {
     timestamps: true

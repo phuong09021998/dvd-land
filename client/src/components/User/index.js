@@ -1,9 +1,11 @@
 import React from 'react'
+import UserLayout from '../../hoc/UserLayout'
 
-export default function UserDashBoard() {
+
+export default function UserDashboard(props) {
     return (
-        <div>
-            UserDashboard
-        </div>
+        <UserLayout {...props}>
+            right content
+        </UserLayout>
     )
 }

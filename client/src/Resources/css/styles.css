@@ -1,8 +1,8 @@
 * {margin: 0; padding: 0; font-family: 'Baloo Chettan 2', cursive;}
 
-button:focus, button:hover {outline:0!important; border: none}
-input:focus, input:hover {outline:0!important; border: none}
-select:focus, select:hover {outline:0!important; border: none}
+button:focus, button:hover {outline:0!important}
+input:focus {outline:0!important}
+#search_bar:focus {outline:0!important; border: none}
 
 .home {
     height: 800px;
@@ -17,6 +17,14 @@ select {
     background: url('../images/arrow-down-solid.svg') 85% / 10% no-repeat white;
 }
 
+.container {
+    width: 1170px;
+    margin: auto;
+}
+
+.fixed_container {
+    height: 850px;
+}
 
 /* Header */
 
@@ -300,6 +308,7 @@ input:-webkit-autofill:active  {
     height: 100%;
     background-color: black;
     width: 10%;
+    cursor: pointer;
 }
 
 .input_search{
@@ -307,4 +316,249 @@ input:-webkit-autofill:active  {
     border: none;
     width: 80%;
     padding-left: 15px;
+}
+
+
+/* Dashboard */
+.dashboard_title{
+    font-size: 40px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 40px;
+}
+
+#dashboard_avatar{
+    font-size: 80px;
+}
+
+.user_avatar{
+    display: flex;
+}
+
+.avatar_text{
+    padding-left: 7px;
+    height: 40px;
+    margin-top: 20px;
+}
+
+.hello {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 10px;
+}
+
+.avatar_title {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    line-height: 10px;
+}
+
+.left_menu{
+    margin-top: 20px;
+    border-bottom: 1px solid gray;;
+}
+
+.menu_item_dashboard{
+    display: block;
+    font-size: 18px;
+    text-transform: uppercase;
+    padding: 5px 20px;
+    border: 1px solid gray;
+    border-bottom: none;
+    background-color: #f6f6f6;
+    font-weight: bold;
+    color: black;
+}
+
+.menu_item_dashboard:hover{
+    color: #fcb800;
+}
+
+.dashboard_active {
+    background-color: #fcb800;
+}
+
+.dashboard_active:hover {
+    color: black
+}
+
+.admin_menu_title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+    color: black;
+}
+
+/* DashBoard Right */
+
+.dashboard_right {
+    margin-top: 100px;
+    position: relative;
+}
+
+.top_control {
+    width: 98.3%;
+    display: flex;
+    transform: translateY(-100%);
+    position: absolute;
+}
+
+.search_area{
+    width: 95%;
+
+    position: relative;
+    border: 1px solid gray;
+    height: 40px;
+    border-radius: 5px 0 0 0;
+    border-bottom: none;
+    border-right: none;
+}
+#plus {
+    font-size: 30px;
+}
+
+.add_button{
+    width: 5%;
+    background: white;
+    border: 1px solid gray;
+    cursor: pointer;
+    border-radius: 0 5px 0 0;
+    border-bottom: none;
+}
+
+.add_button:hover {
+    border: 1px solid gray;
+    background: white;
+    border-bottom: none;
+}
+
+.admin_content {
+    width: 100%;
+    height: 100%;
+    border: 1px solid gray;
+}
+
+
+.close_modal{
+    border: none;
+    width: 20px;
+    height: 20px;
+    background: white;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px
+}
+
+.form_title{
+    font-size: 25px;
+    font-weight: bold;
+    color: black!important;
+    text-align: center;
+}
+
+#close {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.label_form{
+    position: relative;
+    left: 10%;
+}
+
+.special_field{
+    padding-left: 80px;
+}
+
+.form_input_title {
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    position: relative;
+    left: 10%;
+}
+
+
+
+.select_form {
+    display: inline;
+    border: 1px solid gray;
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 90px;
+    padding-left: 10px;
+}
+
+.select_form:hover {
+    display: inline;
+    border: 1px solid gray;
+}
+
+.select_form:focus {
+    outline: none;
+}
+
+.button_edit_form{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #fcb800;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.form_message{
+    font-size: 16px;
+    font-weight: bold;
+    color: red;
+    text-align: center;
+}
+
+.form_success {
+    color: green!important;
+}
+
+.img_form {
+    width: 100px;
+    height: 100px;
+    display: block;
+    position: relative;
+    left: 10%;
+    margin: 10px 0;
+
+}
+
+
+.checkbox_wrapp {
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    width: 80%;
+    left: 10%;
+}
+
+.label_checkbox {
+    padding-left: 5px;
+}
+
+.checkbox_field {
+    position: relative;
+    top: 10%;
+}
+
+.checkbox_block {
+    position: relative;
+    width: 33.33%;
 }
