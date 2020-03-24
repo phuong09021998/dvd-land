@@ -31,6 +31,10 @@ export const validate =  (element, formData=[]) => {
         } else {
             valid = false
         }
+
+        if (!element.value) {
+            valid = true
+        }
         const message = `${!valid ? 'Fixed price must be less than original price':''}`
         error = !valid ? [valid, message] : error;
     }
@@ -43,7 +47,6 @@ export const validate =  (element, formData=[]) => {
 
     if (element.validation.checkbox) {
         const valid = element.value.length !== 0
-        console.log(element.value.length !== 0)
         const message = `${!valid ? 'You must choose at least one genre':''}`;
         error = !valid ? [valid,message] : error;
     }
@@ -71,9 +74,11 @@ export const update = (element, formData, formName) => {
         if(element.e.target.checked){
             if(!newElement.value.includes(element.e.target.value)) {
                 newElement.value.push(element.e.target.value)
+                newElement.check = true
             }
         } else {
             newElement.value = newElement.value.filter(id => id !== element.e.target.value)
+            newElement.check = false
         }
         
        
@@ -106,7 +111,10 @@ export const generateData = (formData, formName) => {
         if (key !== 'confirmPassword') {
             dataToSubmit[key] = formData[key].value
         }
-        dataToSubmit.photo = formData.photo.photo_data
+        if (dataToSubmit.photo) {
+            dataToSubmit.photo = formData.photo.photo_data
+        }
+        
     }
 
     return dataToSubmit

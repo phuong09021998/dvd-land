@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Items from './Items'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getGenre } from '../../../actions/genre_action'
-import { getCountry } from '../../../actions/country_action'
-
+import { searchProduct, removeSearch } from '../../../actions/product_action'
+import RenderSearch from './RenderSearch'
 
 
 function Header(props) {
@@ -12,7 +12,9 @@ function Header(props) {
     const listItem = [
         {
             icon: <i class="fas fa-store-alt"></i>,
-            link: '/shop'
+            link: '/shop',
+            tooltip: true,
+            tooltip_text: 'Go to Shop'
         },
         {
             icon: <i class="fas fa-shopping-cart"></i>,
@@ -28,11 +30,13 @@ function Header(props) {
     const listItemUser = [
         {
             icon: <i class="fas fa-store-alt"></i>,
-            link: '/shop'
+            link: '/shop',
+            tooltip: true,
+            tooltip_text: 'Go to Shop'
         },
         {
             icon: <i class="fas fa-shopping-cart"></i>,
-            link: '/cart'
+            link: 'cart'
         },
         {
             icon: <i class="far fa-user"></i>,
@@ -70,9 +74,10 @@ function Header(props) {
         genre: ''
     })
 
+    const [loadingSearch, setLoadingSearch] = useState(false)
+
     useEffect(() => {
         props.dispatch(getGenre())
-        props.dispatch(getCountry())
     }, [])
 
     const handleSearchInput = (e) => {
@@ -80,11 +85,35 @@ function Header(props) {
             ...searchValue,
             key: e.target.value
         })
+        
     }
+
+    useEffect(() => {
+        
+        if (searchValue.key !== "") {
+            setLoadingSearch(true)
+            props.dispatch(searchProduct(searchValue)).then((res) => {
+                setLoadingSearch(false)
+            })
+        } else {
+            props.dispatch(removeSearch())
+        }
+        
+        
+
+    }, [searchValue])
 
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log(searchValue)
+        if (searchValue.key !== "") {
+            setSearchValue({
+                ...searchValue,
+                key: ''
+            })
+            props.history.push(`/search?key=${searchValue.key}&genre=${searchValue.genre}`)
+            
+        }
     }
 
     const handleSelect = (e) => {
@@ -93,6 +122,7 @@ function Header(props) {
             genre: e.target.value
         })
     }
+
 
     return (
         <header>
@@ -112,26 +142,36 @@ function Header(props) {
                                     <option value={item._id} key={i}>{item.name}</option>
                                 )) : null}
                             </select>
-                            <input type="text" onChange={e => handleSearchInput(e)} className="input_search" placeholder="I'm searching for..."/>
+                            <div className="input_wrapp">
+                                <input type="text" onChange={e => handleSearchInput(e)} className="input_search" placeholder="I'm searching for..."/>
+                                {searchValue.key ?<RenderSearch items={props.search} loading={loadingSearch}/> : null}
+                            </div>
+                            
                             <button onClick={e => handleSubmit(e)} className="button_search">Search</button>
                         </form>
                     </div>
                 </div>
+                
                 <div className="item_wrapp">
                     <Items 
                         data={props.user ? listItemUser : listItem}
                     />
                 </div>
             </div>
+        
             
+                    
+
         </header>
     )
 }
 
 const mapStateToProps = (state) => {
     return {
-        genre: state.genre.genres
+        genre: state.genre.genres,
+        newArrivals: state.product.newArrivals,
+        search: state.product.search
     }
 }
 
-export default connect(mapStateToProps)(Header)
+export default connect(mapStateToProps)(withRouter(Header))

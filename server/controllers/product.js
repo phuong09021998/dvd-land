@@ -22,12 +22,10 @@ exports.createProduct = (req, res) => {
         genres.map((item, i) => {
             product.genre = product.genre.concat({item})
         })
-        console.log(fields)
-        console.log('Product', product)
 
         if (file.photo) {
-            if (file.photo.size > 1000000) {
-                return res.status(400).json({err: "Image size cannot be more than 1Mb"})
+            if (file.photo.size > 4000000) {
+                return res.status(400).json({err: "Image size cannot be more than 4Mb"})
             }
             product.photo.data = fs.readFileSync(file.photo.path)
             product.photo.contentType = file.photo.type
@@ -65,8 +63,8 @@ exports.updateProduct = (req, res) => {
         let product = req.product
         product = _.extend(product, fields)
         if (file.photo) {
-            if (file.photo.size > 1000000) {
-                return res.status(400).json({err: "Image size cannot be more than 1Mb"})
+            if (file.photo.size > 4000000) {
+                return res.status(400).json({err: "Image size cannot be more than 4Mb"})
             }
             product.photo.data = fs.readFileSync(file.photo.path)
             product.photo.contentType = file.photo.type
@@ -85,9 +83,14 @@ exports.listProduct = (req, res) => {
     let order = req.query.order ? req.query.order : 'asc'
     let sortBy = req.query.sortBy ? req.query.sortBy : '_id'
     let limit = req.query.limit ? parseInt(req.query.limit) : 6
+    console.log('a', order, sortBy, limit)
     Product.find()
     .select('-photo')
-    .populate('genre')
+    .populate('item')
+    .populate({
+        path: 'genre.item',
+        model: 'Genre'
+    })
     .sort([[sortBy, order]])
     .limit(limit)
     .exec((err, products) => {
@@ -99,40 +102,40 @@ exports.listProduct = (req, res) => {
 }
 
 exports.productBySearch = (req, res) => {
-    let order = req.body.order ? req.body.order : 'desc'
-    let sortBy = req.body.sortBy ? req.body.sortBy : '_id'
-    let limit = req.body.limit ? parseInt(req.body.limit) : 12
-    let genre = req.body.genre ? req.body.genre : ''
-    let skip = parseInt(req.body.skip)
-    let searchKey = req.body.key ? req.body.key : ''
-    if (genre) {
-        Product.find({name: {$regex: searchKey, $options: 'i'}, genre: new ObjectId(genre)})
-        .select('-photo')
-        .populate('genre')
-        .sort([[sortBy, order]])
-        .skip(skip)
-        .limit(limit)
-        .exec((err, products) => {
-            if (err) {
-                return res.status(400).json(err);
+    let order = req.query.order ? req.query.order : 'desc'
+    let sortBy = req.query.sortBy ? req.query.sortBy : '_id'
+    let limit = req.query.limit ? parseInt(req.query.limit) : 6
+    let skip = parseInt(req.query.skip)
+    let findArgs = {}
+
+    for (let key in req.body) {
+        if(req.body[key].length > 0) {
+            if (key === "key") {
+                findArgs.name = {$regex: req.body.key, $options: 'i'}
+            } else if (key === "genre") {
+                findArgs.genre = {$elemMatch: {item: new ObjectId(req.body[key])}}
             }
-            res.json(products);
-        })
-    } else {
-        Product.find({name: {$regex: searchKey, $options: 'i'}})
-        .select('-photo')
-        .populate('genre')
-        .sort([[sortBy, order]])
-        .skip(skip)
-        .limit(limit)
-        .exec((err, products) => {
-            if (err) {
-                return res.status(400).json(err);
-            }
-            res.json(products);
-        })
+        }
+       
     }
-   
+    console.log(findArgs)
+
+    Product.find(findArgs)
+        .select('-photo')
+        .populate({
+            path: 'genre.item',
+            model: 'Genre'
+        })
+        .populate('country')
+        .sort([[sortBy, order]])
+        .skip(skip)
+        .limit(limit)
+        .exec((err, products) => {
+            if (err) {
+                return res.status(400).json(err);
+            }
+            res.json(products);
+    })
 }
 
 exports.listGenre = (req, res) => {
@@ -158,6 +161,23 @@ exports.getPhoto = (req, res) => {
         res.set('Content-Type', req.product.photo.contentType);
         return res.send(req.product.photo.data);
     }
+}
+
+exports.getHotSales = (req, res) => {
+    Product.find({fixed_price: {$ne: null}})
+    .select('-photo')
+    .populate({
+        path: 'genre.item',
+        model: 'Genre'
+    })
+    .populate('country')
+    .limit(8)
+    .exec((err, products) => {
+        if (err) {
+            return res.status(400).json(err);
+        }
+        res.json(products);
+    })
 }
 
 // Middleware

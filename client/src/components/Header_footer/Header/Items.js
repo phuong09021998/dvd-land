@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logoutUser } from '../../../actions/user_actions'
-import { Menu, Dropdown } from 'antd'
+import { Menu, Dropdown, Tooltip, Button } from 'antd'
 
 
 function Items(props) {
@@ -16,25 +16,6 @@ function Items(props) {
         }
     }
 
-    // const menu = (setting) => (
-    //     <Menu>
-    //         <Menu.Item>
-    //             <Link>
-    //                 'OK'
-    //             </Link>
-    //         </Menu.Item>
-    //         <Menu.Item>
-    //             <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-    //             2nd menu item
-    //             </a>
-    //         </Menu.Item>
-    //         <Menu.Item>
-    //             <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-    //             3rd menu item
-    //             </a>
-    //         </Menu.Item>
-    //     </Menu>
-    // );
 
     const menu = (setting) => (
         <Menu className="dropdown_menu">
@@ -64,17 +45,28 @@ function Items(props) {
                                 {item.text}
                             </div>
                         : null}
-                        {/* <Dropdown overlay={menu}>
-                            <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                            Hover me
-                            </a>
-                        </Dropdown> */}
+
                     </Link>
                 </Dropdown>
             )
             : 
             
-            (
+            (   item.tooltip ?
+                    <Tooltip placement="bottom" title={item.tooltip_text}>
+                        <Button className="button_tooltip">
+                            <Link className="menu_item" key={i} to={item.link} onClick={e => handleClick({ e, item })}>
+                                <div className="icon">{item.icon}</div>
+                                {item.text ?
+                                    <div className="item_text">
+                                        {item.text}
+                                    </div>
+                                : null}
+                            </Link>
+                        </Button>
+                    </Tooltip>
+                    
+                : 
+            
                 <Link className="menu_item" key={i} to={item.link} onClick={e => handleClick({ e, item })}>
                     <div className="icon">{item.icon}</div>
                     {item.text ?
@@ -83,6 +75,7 @@ function Items(props) {
                         </div>
                     : null}
                 </Link>
+                
             ) 
             
         ))

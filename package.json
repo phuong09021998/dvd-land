@@ -29,6 +29,7 @@
     "mongoose": "^5.7.12",
     "morgan": "^1.9.1",
     "nodemon": "^2.0.1",
+    "react-html-parser": "^2.0.2",
     "validator": "^12.1.0"
   }
 }

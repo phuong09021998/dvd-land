@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import UserLayout from '../../hoc/UserLayout'
 import Modal from 'react-modal';
 import FormField from '../utils/Form/FormField'
 import { update, generateData, isFormValid } from '../utils/Form/FormAction'
 import { createProduct } from '../../actions/product_action'
-
+import { getCountry } from '../../actions/country_action'
 
 import { connect } from 'react-redux'
 
@@ -166,7 +166,7 @@ function AdminProduct(props) {
                         required: false,
                         less: 'price'
                     },
-                    valid: false,
+                    valid: true,
                     touched: false,
                     validationMessage: ''
                 },
@@ -176,7 +176,7 @@ function AdminProduct(props) {
                     config: {
                         name: 'trailer_input',
                         type: 'text',
-                        placeholder: 'Trailer Link (Youtube)'
+                        placeholder: 'Embedded Link (Youtube)'
                     },
                     validation: {
                         required: true
@@ -192,7 +192,6 @@ function AdminProduct(props) {
 
     function openModal() {
         setIsOpen(true);
-        
     }
 
     function afterOpenModal() {
@@ -219,20 +218,20 @@ function AdminProduct(props) {
 
     }
 
+    useEffect(() => {
+        props.dispatch(getCountry())
+    })
+
     const handleFormSubmit = (e) => {
         e.preventDefault()
 
         let dataToSubmit = generateData(productForm.formData, 'edit_product')
         let formIsValid = isFormValid(productForm.formData, 'edit_product')
-        console.log(dataToSubmit)
 
         if (formIsValid) {
             props.dispatch(createProduct(dataToSubmit)).then(response =>{
-                setProductForm({
-                    ...originalState,
-                    formError: false,
-                    formMessage: 'Product has been created successfully'
-                })
+                closeModal()
+                alert('Product has been created successfully')
             })
         } else {
             setProductForm({
