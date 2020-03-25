@@ -4,7 +4,6 @@ import Modal from 'react-modal';
 import FormField from '../utils/Form/FormField'
 import { update, generateData, isFormValid } from '../utils/Form/FormAction'
 import { createProduct } from '../../actions/product_action'
-import { getCountry } from '../../actions/country_action'
 
 import { connect } from 'react-redux'
 
@@ -96,7 +95,7 @@ function AdminProduct(props) {
                 genre: {
                     element: 'checkbox',
                     value: [],
-                    data: props.genre ? props.genre : [],
+                    data: [],
                     title: 'Genre',
                     config: {
                         name: 'genre_input',
@@ -111,8 +110,8 @@ function AdminProduct(props) {
                 },
                 country: {
                     element: 'select',
-                    value: props.country ? props.country[0]._id : '',
-                    data: props.country ? props.country : [],
+                    value: '',
+                    data: [],
                     title: 'Select the country:',
                     config :{
                         name: 'country_input',
@@ -190,6 +189,27 @@ function AdminProduct(props) {
 
     const [productForm, setProductForm] = useState(originalState)
 
+    useEffect(() => {
+        setProductForm({
+            ...productForm,
+            formData: {
+                ...productForm.formData,
+                genre: {
+                    ...productForm.formData.genre,
+                    data: props.genre ? props.genre : []
+                },
+                country: {
+                    ...productForm.formData.country,
+                    data: props.country ? props.country : [],
+                    value: props.country ? props.country[0]._id : ''
+                }
+            }
+        })
+    }, [props.genre, props.country])
+
+    console.log(productForm)
+
+
     function openModal() {
         setIsOpen(true);
     }
@@ -218,10 +238,6 @@ function AdminProduct(props) {
 
     }
 
-    useEffect(() => {
-        props.dispatch(getCountry())
-    })
-
     const handleFormSubmit = (e) => {
         e.preventDefault()
 
@@ -241,9 +257,8 @@ function AdminProduct(props) {
             })
         }
     }
-   
 
-
+    console.log(productForm)
     return (
         <UserLayout {...props}>
             <div className="top_control">

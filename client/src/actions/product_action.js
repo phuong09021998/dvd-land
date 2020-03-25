@@ -80,8 +80,8 @@ export const removeSearch = () => {
     }
 }
 
-export const searchProductPage = (dataToSubmit) => {
-    const request = axios.post('/api/product/search?limit=12', dataToSubmit)
+export const searchProductPage = (dataToSubmit, limit) => {
+    const request = axios.post(`/api/product/search?limit=${limit || 12}`, dataToSubmit)
         .then(res => res.data)
 
         return {
@@ -90,3 +90,22 @@ export const searchProductPage = (dataToSubmit) => {
         }
 }
 
+
+export function getProductsToShop(dataToSubmit, skip, limit, previousState = []){
+    const request = axios.post(`/api/product/search?limit=${limit || 9}&skip=${skip || 0}`, dataToSubmit)
+                .then(res => {
+                    let newState = [
+                        ...previousState,
+                        ...res.data
+                    ]
+                    return {
+                        articles: newState
+                    }
+                });
+
+    return {
+        type: 'product_to_shop',
+        payload: request
+    }
+
+}

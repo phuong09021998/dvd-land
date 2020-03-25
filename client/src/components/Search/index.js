@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { searchProductPage } from '../../actions/product_action'
 import { connect } from 'react-redux'
 import Card from '../utils/Card'
+import { Spin } from 'antd'
 
 
 function useQuery() {
@@ -14,14 +15,13 @@ function SearchResult(props) {
     let query = useQuery();
     const [searchValue, setSearchValue] = useState({
         key: query.get('key'),
-        genre: query.get('genre')
+        genre: query.get('genre') ? [query.get('genre')] : []
     })
 
     useEffect(() => {
         props.dispatch(searchProductPage(searchValue))
     }, [])
 
-    console.log(props.searchPage)
     return (
         <div className="login_register_wrapp" style={{backgroundColor: '#f1f1f1'}}>
             <div className="container">
@@ -31,7 +31,7 @@ function SearchResult(props) {
                         props.searchPage.map((item, i) => (
                             <Card {...item} style={{margin: '10px 17px', border: '1px solid gray', borderRadius: '0 0 5px 5px'}}/>
                         ))
-                    : null}
+                    : <Spin tip="Loading..." className="spin_collapse" size="large"/>}
                 </div>
             </div>
             

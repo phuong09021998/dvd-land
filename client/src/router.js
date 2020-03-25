@@ -11,6 +11,7 @@ import { getUser } from './actions/user_actions'
 import UserDashBoard from './components/User/index'
 import AdminProduct from './components/Admin/Product'
 import SearchResult from './components/Search'
+import Shop from './components/Shop'
 
 function Routes(props) {
   useEffect(() => {
@@ -26,6 +27,7 @@ function Routes(props) {
         <PrivateRoute {...props} path="/user/dashboard" component={UserDashBoard}/>
         <PublicRoute {...props} restricted={true} path='/register_login' exact component={LoginRegister}/>
         <PublicRoute {...props} exact component={SearchResult} path='/search'/>
+        <PublicRoute {...props} exact component={Shop} path='/shop'/>
       </Switch>
     </Layout>
   );

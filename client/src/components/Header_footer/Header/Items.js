@@ -53,7 +53,7 @@ function Items(props) {
             
             (   item.tooltip ?
                     <Tooltip placement="bottom" title={item.tooltip_text}>
-                        <Button className="button_tooltip">
+                        <button className="button_tooltip" id="button_shop">
                             <Link className="menu_item" key={i} to={item.link} onClick={e => handleClick({ e, item })}>
                                 <div className="icon">{item.icon}</div>
                                 {item.text ?
@@ -62,7 +62,7 @@ function Items(props) {
                                     </div>
                                 : null}
                             </Link>
-                        </Button>
+                        </button>
                     </Tooltip>
                     
                 : 

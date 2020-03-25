@@ -3,6 +3,7 @@ import Items from './Items'
 import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getGenre } from '../../../actions/genre_action'
+import { getCountry } from '../../../actions/country_action'
 import { searchProduct, removeSearch } from '../../../actions/product_action'
 import RenderSearch from './RenderSearch'
 
@@ -71,13 +72,14 @@ function Header(props) {
 
     const [searchValue, setSearchValue] = useState({
         key: '',
-        genre: ''
+        genre: []
     })
 
     const [loadingSearch, setLoadingSearch] = useState(false)
 
     useEffect(() => {
         props.dispatch(getGenre())
+        props.dispatch(getCountry())
     }, [])
 
     const handleSearchInput = (e) => {
@@ -105,7 +107,6 @@ function Header(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(searchValue)
         if (searchValue.key !== "") {
             setSearchValue({
                 ...searchValue,
@@ -114,13 +115,15 @@ function Header(props) {
             props.history.push(`/search?key=${searchValue.key}&genre=${searchValue.genre}`)
             
         }
+
     }
 
     const handleSelect = (e) => {
         setSearchValue({
             ...searchValue,
-            genre: e.target.value
+            genre: e.target.value ? [e.target.value] : []
         })
+        
     }
 
 

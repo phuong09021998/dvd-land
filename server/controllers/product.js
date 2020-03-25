@@ -83,7 +83,6 @@ exports.listProduct = (req, res) => {
     let order = req.query.order ? req.query.order : 'asc'
     let sortBy = req.query.sortBy ? req.query.sortBy : '_id'
     let limit = req.query.limit ? parseInt(req.query.limit) : 6
-    console.log('a', order, sortBy, limit)
     Product.find()
     .select('-photo')
     .populate('item')
@@ -113,12 +112,19 @@ exports.productBySearch = (req, res) => {
             if (key === "key") {
                 findArgs.name = {$regex: req.body.key, $options: 'i'}
             } else if (key === "genre") {
-                findArgs.genre = {$elemMatch: {item: new ObjectId(req.body[key])}}
+                findArgs.genre = {}
+                findArgs.genre.$all = {}
+                let items = []
+                req.body.genre.map((one_item, i) => {
+                    items.push({$elemMatch: {item: new ObjectId(one_item)}})
+                })
+                findArgs.genre.$all = items
+            } else {
+                findArgs.country = new ObjectId(req.body['country'])
             }
         }
        
     }
-    console.log(findArgs)
 
     Product.find(findArgs)
         .select('-photo')

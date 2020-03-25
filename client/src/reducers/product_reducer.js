@@ -13,9 +13,11 @@ export default function (state={}, action) {
         case 'search_product':
             return {...state, search: action.payload}
         case 'remove_search':
-            return {...state, search: null}
+            return {...state, search: null, toShop: null}
         case 'search_product_page':
             return {...state, searchPage: action.payload}
+        case 'product_to_shop':
+            return {...state, toShop: action.payload.articles}
         default:
             return state
     }
