@@ -18,6 +18,8 @@ export default function (state={}, action) {
             return {...state, searchPage: action.payload}
         case 'product_to_shop':
             return {...state, toShop: action.payload.articles}
+        case 'by_id':
+            return {...state, byId: action.payload}
         default:
             return state
     }

@@ -1,12 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import LeftMenu from './LeftMenu'
 import { connect } from 'react-redux'
-import { update, generateData, isFormValid } from '../utils/Form/FormAction'
+import { update, generateData } from '../utils/Form/FormAction'
 import { getProductsToShop, removeSearch } from '../../actions/product_action'
 import RightMenu from './RightMenu'
 import RightMenuList from './RightMenuList'
+import { useLocation } from 'react-router-dom'
+
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 function Shop(props) {
+    let query = useQuery();
+    const [initial, setInitial] = useState({
+        genre: query.get('genre') ? [query.get('genre')] : false,
+        country: query.get('country') || false,
+        key: query.get('key') || false
+    })
+
+
+    const isFirstRun = useRef(true)
 
     const [shopForm, setShopform] = useState({
         formError: false,
@@ -64,6 +79,11 @@ function Shop(props) {
     const [boxview, setBoxview] = useState(true)
 
     const updateForm = (element) => {
+        const idChange = element.id
+        let newInitial = initial
+        newInitial[element.id] = false
+        console.log(newInitial)
+        setInitial(newInitial)
         const newFormData = update(element, shopForm.formData, 'shop')
         setShopform({
             ...shopForm,
@@ -106,27 +126,41 @@ function Shop(props) {
                 ...shopForm.formData,
                 genre: {
                     ...shopForm.formData.genre,
-                    data: props.genre ? props.genre : []
+                    data: props.genre ? props.genre : [],
+                    value: initial.genre.length ? initial.genre : []
                 },
                 country: {
                     ...shopForm.formData.country,
-                    data: props.country ? props.country : []
+                    data: props.country ? props.country : [],
+                    value: initial.country || ""
+                },
+                key: {
+                    ...shopForm.formData.key,
+                    value: initial.key || ""
                 }
             }
         })
     }, [props.genre, props.country])
 
-    
+    // useEffect(() => {
+    //     setDataToSubmit(generateData(shopForm.formData, 'shop'))
+    // },[shopForm])
+
+    // useEffect(() => {
+    //     console.log(dataToSubmit)
+    //     props.dispatch(removeSearch())
+    //     props.dispatch(getProductsToShop(dataToSubmit, loadMore.skip, loadMore.limit, props.shop || []))
+    // }, [dataToSubmit])
 
     const getCount = () => loadMore.skip + loadMore.limit
 
-    useEffect(() => {
-        props.dispatch(removeSearch())
-        setLoadMore({
-            skip: 0,
-            limit: 9
-        })
-    }, [])
+    // useEffect(() => {
+    //     props.dispatch(removeSearch())
+    //     setLoadMore({
+    //         skip: 0,
+    //         limit: 9
+    //     })
+    // }, [])
 
     const handleListView = ({e, id}) => {
         e.preventDefault()
@@ -170,7 +204,19 @@ function Shop(props) {
     }, [boxview])
 
     useEffect(() => {
-        props.dispatch(getProductsToShop(dataToSubmit, loadMore.skip, loadMore.limit, props.shop || []))
+        if (isFirstRun.current) {
+            isFirstRun.current = false
+
+            
+        } else {
+
+            if (Object.keys(dataToSubmit).length) {
+                props.dispatch(getProductsToShop(dataToSubmit, loadMore.skip, loadMore.limit, props.shop || []))
+            } else {
+                props.dispatch(getProductsToShop(initial, loadMore.skip, loadMore.limit, props.shop || []))
+            }
+        }
+        
     }, [loadMore])
 
     
@@ -186,6 +232,7 @@ function Shop(props) {
                         shopForm={shopForm}
                         submitForm={e => handleSubmit(e)}
                         change={element => updateForm(element)}
+                        initial={initial}
                     />
                 </div>
                 <div className="shop_right">

@@ -7,6 +7,7 @@ export default function RightMenuList(props) {
     return (
         <div className="right_menu_list">
             {props.products ?
+                props.products.length ?
                 props.products.map((item, i) => (
                     <div className="one_list_product" key={i}>
                         <div className="left_list_wrapp">
@@ -33,6 +34,10 @@ export default function RightMenuList(props) {
                         </div>
                     </div>
                 ))
+                : <div className="nothing_found">
+                    <div className="nothing_text">Nothing Found</div>
+                    <i class="far fa-frown" id="nothing"></i>
+                </div>
                 
             : <Spin className="loading_spin" style={{marginTop: '150px'}}/>}
         </div>

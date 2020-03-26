@@ -12,7 +12,7 @@ import UserDashBoard from './components/User/index'
 import AdminProduct from './components/Admin/Product'
 import SearchResult from './components/Search'
 import Shop from './components/Shop'
-
+import ProductDetail from './components/ProductDetail'
 function Routes(props) {
   useEffect(() => {
     props.dispatch(getUser())
@@ -28,6 +28,7 @@ function Routes(props) {
         <PublicRoute {...props} restricted={true} path='/register_login' exact component={LoginRegister}/>
         <PublicRoute {...props} exact component={SearchResult} path='/search'/>
         <PublicRoute {...props} exact component={Shop} path='/shop'/>
+        <PublicRoute {...props} exact component={ProductDetail} path='/shop/:id'/>
       </Switch>
     </Layout>
   );

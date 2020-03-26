@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Collapse } from 'antd'
 import { Spin } from 'antd'
 
 
 const { Panel } = Collapse
-export default function LeftMenu({shopForm, submitForm, country, change}) {
+export default function LeftMenu({shopForm, submitForm, change, initial}) {
+
 
     const genreHeader = () => (
         <div className="header_collapse">
@@ -28,6 +29,7 @@ export default function LeftMenu({shopForm, submitForm, country, change}) {
                         {...shopForm.formData.key.config}
                         className="input_collapse"
                         onChange={e => change({e, id:"key"})}
+                        value={initial.key || shopForm.formData.key.value}
                     />
                 </div>
                 
@@ -43,6 +45,7 @@ export default function LeftMenu({shopForm, submitForm, country, change}) {
                                         name={item.name}
                                         value={item._id}
                                         onChange={(e) => change({e, id:"genre"})}
+                                        checked={initial.genre ? initial.genre[0] === item._id : null}
                                     />
                                     
                                 </div>
@@ -62,8 +65,7 @@ export default function LeftMenu({shopForm, submitForm, country, change}) {
                                     className="radio_collapse"
                                     name="country"
                                     value=""
-                                    onChange={(e) => change({e, id:"country"})}
-                                    
+                                    onChange={(e) => change({e, id:"country"})} 
                                 />
                             </div>
                         
@@ -77,6 +79,7 @@ export default function LeftMenu({shopForm, submitForm, country, change}) {
                                         name="country"
                                         value={item._id}
                                         onChange={(e) => change({e, id:"country"})}
+                                        checked={initial.country ? initial.country === item._id : null}
                                     />
                                 </div>
                             ))}

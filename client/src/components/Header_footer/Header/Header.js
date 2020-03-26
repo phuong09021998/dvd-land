@@ -70,6 +70,8 @@ function Header(props) {
         }
     ]
 
+    const inputRef = React.createRef()
+
     const [searchValue, setSearchValue] = useState({
         key: '',
         genre: []
@@ -112,7 +114,8 @@ function Header(props) {
                 ...searchValue,
                 key: ''
             })
-            props.history.push(`/search?key=${searchValue.key}&genre=${searchValue.genre}`)
+            inputRef.current.blur()
+            props.history.push(`/shop?key=${searchValue.key}&genre=${searchValue.genre}`)
             
         }
 
@@ -146,7 +149,7 @@ function Header(props) {
                                 )) : null}
                             </select>
                             <div className="input_wrapp">
-                                <input type="text" onChange={e => handleSearchInput(e)} className="input_search" placeholder="I'm searching for..."/>
+                                <input type="text" onChange={e => handleSearchInput(e)} className="input_search" placeholder="I'm searching for..." value={searchValue.key} ref={inputRef}/>
                                 {searchValue.key ?<RenderSearch items={props.search} loading={loadingSearch}/> : null}
                             </div>
                             

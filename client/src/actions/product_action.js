@@ -109,3 +109,14 @@ export function getProductsToShop(dataToSubmit, skip, limit, previousState = [])
     }
 
 }
+
+export const getProductById = (id) => {
+    const request = axios.get(`/api/product/${id}`)
+        .then(res => res.data)
+
+        return {
+            type: 'by_id',
+            payload: request
+        }
+}
+
