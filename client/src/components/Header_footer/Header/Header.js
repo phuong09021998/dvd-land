@@ -80,6 +80,7 @@ function Header(props) {
     const [loadingSearch, setLoadingSearch] = useState(false)
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         props.dispatch(getGenre())
         props.dispatch(getCountry())
     }, [])

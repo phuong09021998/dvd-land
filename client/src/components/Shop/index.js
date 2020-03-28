@@ -79,10 +79,8 @@ function Shop(props) {
     const [boxview, setBoxview] = useState(true)
 
     const updateForm = (element) => {
-        const idChange = element.id
         let newInitial = initial
         newInitial[element.id] = false
-        console.log(newInitial)
         setInitial(newInitial)
         const newFormData = update(element, shopForm.formData, 'shop')
         setShopform({
@@ -206,8 +204,6 @@ function Shop(props) {
     useEffect(() => {
         if (isFirstRun.current) {
             isFirstRun.current = false
-
-            
         } else {
 
             if (Object.keys(dataToSubmit).length) {
@@ -219,7 +215,27 @@ function Shop(props) {
         
     }, [loadMore])
 
-    
+    useEffect(() => {
+        if(!isFirstRun.current) {
+            setInitial({
+                ...initial,
+                key: query.get('key') || ""
+            })
+         
+            if (boxview) {
+                setLoadMore({
+                    skip: 0,
+                    limit: 9
+                })
+            } else {
+                setLoadMore({
+                    skip: 0,
+                    limit: 6
+                })
+            }
+        }
+        
+    }, [query.get('key')] )
     
 
     return (

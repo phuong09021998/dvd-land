@@ -17,7 +17,6 @@ export default function RightMenu(props) {
     }, [props.products])
 
 
-
     return (
         <div className="product_wrapp">
             {props.products ? 

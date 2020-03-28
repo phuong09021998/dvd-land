@@ -10,6 +10,8 @@ const LoginRegister = (props) => {
     const handleLoginClick = () => setToggleBox(false)
     const handleRegisterClick = () => setToggleBox(true)
 
+
+
     return (
         <div className="login_register_wrapp">
             <h1 className="login_title">My Account</h1>
@@ -31,7 +33,7 @@ const LoginRegister = (props) => {
                    
                     {toggleBox ?
                         <Register />
-                    : <Login />}
+                    : <Login {...props} />}
                 </div>
                 
             </div>

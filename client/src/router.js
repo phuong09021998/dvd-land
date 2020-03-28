@@ -13,6 +13,9 @@ import AdminProduct from './components/Admin/Product'
 import SearchResult from './components/Search'
 import Shop from './components/Shop'
 import ProductDetail from './components/ProductDetail'
+import { LastLocationProvider } from 'react-router-last-location'
+import ScrollTop from './components/utils/ScrollTop'
+
 function Routes(props) {
   useEffect(() => {
     props.dispatch(getUser())
@@ -21,15 +24,21 @@ function Routes(props) {
 
   return (
     <Layout {...props}>
+      
       <Switch>
-        <Route path='/' exact component={Home}/>
+      <LastLocationProvider>
+        <ScrollTop>
         <AdminRoute {...props} path="/admin/product" component={AdminProduct}/>
         <PrivateRoute {...props} path="/user/dashboard" component={UserDashBoard}/>
         <PublicRoute {...props} restricted={true} path='/register_login' exact component={LoginRegister}/>
+        <PublicRoute path='/' exact component={Home} {...props}/>
         <PublicRoute {...props} exact component={SearchResult} path='/search'/>
         <PublicRoute {...props} exact component={Shop} path='/shop'/>
         <PublicRoute {...props} exact component={ProductDetail} path='/shop/:id'/>
+        </ScrollTop>
+      </LastLocationProvider>
       </Switch>
+      
     </Layout>
   );
 }

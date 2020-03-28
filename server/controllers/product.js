@@ -5,6 +5,7 @@ const _ = require('lodash')
 const ObjectId = require('mongoose').Types.ObjectId
 
 exports.getProductById = (req, res) => {
+    req.product.photo = null
     return res.status(200).json({product: req.product})
 }
 
@@ -188,7 +189,13 @@ exports.getHotSales = (req, res) => {
 
 // Middleware
 exports.productById = (req, res, next, id) => {
-    Product.findById(id).exec((err, product) => {
+    Product.findById(id)
+    .populate({
+        path: 'genre.item',
+        model: 'Genre'
+    })
+    .populate('country')
+    .exec((err, product) => {
         if (err) {
             return res.status(400).json({err})
         }
