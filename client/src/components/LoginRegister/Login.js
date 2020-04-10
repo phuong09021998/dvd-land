@@ -5,7 +5,7 @@ import { loginUser } from '../../actions/user_actions'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import Fade from 'react-reveal/Fade'
-import { useLastLocation } from 'react-router-last-location'
+
 const Login = (props) => {
     const [loginForm, setLoginForm] = useState({
         formError: false,
@@ -45,8 +45,6 @@ const Login = (props) => {
         }
     })
 
-    const lastLocation = JSON.stringify(useLastLocation())
-    console.log(lastLocation)
     
     const updateForm = (element) => {
         
@@ -67,11 +65,7 @@ const Login = (props) => {
         let formIsValid = isFormValid(loginForm.formData, 'login')
 
         if (formIsValid) {
-            props.dispatch(loginUser(dataToSubmit)).then(response =>{
-                if (lastLocation) {
-                    props.history.goBack() 
-                }     
-            }).catch(err => {
+            props.dispatch(loginUser(dataToSubmit)).catch(err => {
                 console.log(err)
                 setLoginForm({
                     ...loginForm,

@@ -23,7 +23,7 @@ export default function RightMenu(props) {
                 props.products.length ?
                 props.products.map((item, i) => (
                     
-                    <Card {...item} style={{width: '30%', margin: '0 10px'}}/>
+                    <Card {...item} style={{width: '30%', margin: '0 10px'}} key={i}/>
                     
                 ))
                 : <div className="nothing_found">

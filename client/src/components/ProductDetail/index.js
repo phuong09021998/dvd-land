@@ -5,7 +5,10 @@ import ReactImageZoom from 'react-image-zoom'
 import { Spin } from 'antd'
 import { Link } from 'react-router-dom'
 import ReactHtmlParser from 'react-html-parser'
-
+import { getUser, addToCart, getCartItems } from '../../actions/user_actions'
+import { productFromLocalStorage } from '../../actions/product_action'
+import { openNotification } from '../utils/misc'
+import ls from 'local-storage'
 
 const setting = {
     width: 400,
@@ -30,18 +33,63 @@ function ProductDetail(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log('Add to cart')
+        if (props.user) {
+            props.dispatch(addToCart(null, product._id, count)).then(res => {
+                props.dispatch(getUser(true)).then(res => {
+                    const cartItems = res.payload.user.cart
+                    props.dispatch(getCartItems(cartItems))
+                })
+                openNotification()
+            })
+        } else {
+            let cart = ls('cart')
+            if (cart !== null) {
+                const dataToSave = {
+                    id: product._id,
+                    quantity: count
+                }
+                let newCart = cart
+                let dupItem = newCart.findIndex(item => item.id === product._id)
+                if (dupItem !== -1) {
+                    newCart[dupItem] = {
+                        id: product._id,
+                        quantity: count
+                    }
+                } else {
+                    newCart = newCart.concat(dataToSave)
+                }
+                ls('cart', newCart)
+            } else {
+                const dataToSave = [{
+                    id: product._id,
+                    quantity: count
+                }]
+                ls('cart', dataToSave)
+            }
+            props.dispatch(productFromLocalStorage())
+            openNotification()
+        }
     }
 
-    const handleDecrease = () => {
+    const handleDecrease = (e) => {
+        e.preventDefault()
         if (count > 1) {
             setCount(count - 1)
         }
         
     }
 
-    const handleIncrease = () => {
+    const handleIncrease = (e) => {
+        e.preventDefault()
         setCount(count + 1)
+    }
+
+    const handleChangeCount = (e) => {
+        const value = e.target.value
+        if (value && value > 0) {
+            setCount(e.target.value)
+        }
+        
     }
 
 
@@ -84,7 +132,7 @@ function ProductDetail(props) {
                         <form type="POST" onSubmit={e => handleSubmit(e)} className="add_cart_form">
                             <div className="button_wrapp">
                                 <button className="left_button" onClick={e => handleDecrease(e)}>-</button>
-                                <input className="quantity_input" type="number" value={count}/>
+                                <input className="quantity_input" type="number" value={count} onChange={e => handleChangeCount(e)}/>
                                 <button className="right_button" onClick={e => handleIncrease(e)}>+</button>
                             </div>
                             <button className="add_cart" type="submit" onClick={e => handleSubmit(e)}>Add to cart</button>

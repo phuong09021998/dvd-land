@@ -1,8 +1,52 @@
 import React from 'react'
 import { Spin } from 'antd'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { addToCart, getCartItems } from '../../actions/user_actions'
+import { productFromLocalStorage } from '../../actions/product_action'
+import { openNotification } from '../utils/misc'
+import ls from 'local-storage'
 
-export default function RightMenuList(props) {
+function RightMenuList(props) {
+
+    const handleAddCart = (id) => {
+
+        if (props.user) {
+            props.dispatch(addToCart(null, id)).then(res => {
+                props.dispatch(getCartItems())
+                openNotification()
+            })
+        } else {
+            let cart = ls('cart')
+            if (cart !== null) {
+                const dataToSave = {
+                    id: id,
+                    quantity: 1
+                }
+                let newCart = cart
+                let dupItem = newCart.findIndex(item => item.id === id)
+                if (dupItem !== -1) {
+                    newCart[dupItem] = {
+                        id: id,
+                        quantity: newCart[dupItem].quantity + 1
+                    }
+                } else {
+                    newCart = newCart.concat(dataToSave)
+                }
+                ls('cart', newCart)
+            } else {
+                const dataToSave = [{
+                    id: id,
+                    quantity: 1
+                }]
+                ls('cart', dataToSave)
+            }
+            props.dispatch(productFromLocalStorage())
+            openNotification()
+        }
+        
+    }
+
    
     return (
         <div className="right_menu_list">
@@ -29,7 +73,7 @@ export default function RightMenuList(props) {
                                 <div className="real_price_list">{`USD $${item.fixed_price || item.price}`}</div>
                                 {item.fixed_price ? <div className="fixed_price_list">{`USD $${item.price}`}</div> : null}
                             </div>
-                            <button className="list_view_card_button">Add to cart</button>
+                            <button className="list_view_card_button" onClick={e => handleAddCart(item._id)}>Add to cart</button>
 
                         </div>
                     </div>
@@ -43,3 +87,13 @@ export default function RightMenuList(props) {
         </div>
     )
 }
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.user.user
+    }
+}
+
+
+
+export default connect(mapStateToProps)(RightMenuList)

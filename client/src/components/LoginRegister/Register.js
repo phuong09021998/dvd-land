@@ -8,7 +8,6 @@ import { withRouter } from 'react-router-dom'
 
 import { USER_SERVER } from '../utils/misc'
 import axios from 'axios'
-import Modal from '../utils/Modal'
 import Fade from 'react-reveal/Fade'
 
 const Register = (props) => {
@@ -97,10 +96,11 @@ const Register = (props) => {
         }
     })
 
+    // const inputRef = React.createRef()
 
     const updateForm = (element) => {
         
-        const newFormData = update(element, registerForm.formData, 'login')
+        const newFormData = update(element, registerForm.formData, 'register')
 
         const dataToCheck = {
             email: newFormData.email.value
@@ -108,8 +108,8 @@ const Register = (props) => {
 
         
 
-        if (element.id === 'email') {
-            console.log('OK')
+        if (element.id === 'email'  && element.blur) {
+            
             axios.post(`${USER_SERVER}/check`, dataToCheck).then(res => {
                 newFormData.email.valid = false
                 newFormData.email.validationMessage = 'Your email has already been used'
@@ -132,15 +132,15 @@ const Register = (props) => {
     }
 
     const handleRegisterSubmit = (e) => {
+        // inputRef.current.blur()
         e.preventDefault()
 
         let dataToSubmit = generateData(registerForm.formData, 'register')
         let formIsValid = isFormValid(registerForm.formData, 'register')
-
+        console.log(registerForm.formData)
         if (formIsValid) {
-            props.dispatch(registerUser(dataToSubmit)).then(response =>{
-                setShowModal(true)
-            }).catch(err => {
+            
+            props.dispatch(registerUser(dataToSubmit)).catch(err => {
                 setRegisterForm({
                     ...registerForm,
                     formError: true,
@@ -157,11 +157,9 @@ const Register = (props) => {
         }
     }
 
-    const [showModal, setShowModal] = useState(false)
     
-    const handleCloseModal = () => {
-        props.history.push('/user/dashboard')
-    }
+    
+  
 
     return (
         <Fade duration={500} distance="10px" bottom>
@@ -172,6 +170,7 @@ const Register = (props) => {
                     id={'name'}
                     formdata={registerForm.formData.name}
                     change={(element) => updateForm(element)}
+                    
                 />
                 <FormField 
                     id={'lastName'}
@@ -192,6 +191,7 @@ const Register = (props) => {
                     id={'confirmPassword'}
                     formdata={registerForm.formData.confirmPassword}
                     change={(element) => updateForm(element)}
+                    
                 />
                 {registerForm.formError ?
                     <div className="error_label">{registerForm.formMessage}</div>
@@ -200,11 +200,7 @@ const Register = (props) => {
                 <br/>
                 <button onClick={(e) => handleRegisterSubmit(e)} className="login_button">Register</button>
             </form>
-            <Modal
-                title="Your account has been created"
-                open={showModal}
-                closeModal={() => handleCloseModal()}
-            />
+           
         </div>
         </Fade>
     )

@@ -38,7 +38,7 @@ exports.createProduct = (req, res) => {
             if (err) {
                 return res.status(400).json({err})
             }
-            res.status(200).json({product})
+            res.status(200).json({success: true})
         })
     })
 }
@@ -63,6 +63,12 @@ exports.updateProduct = (req, res) => {
 
         let product = req.product
         product = _.extend(product, fields)
+        product.genre = []
+        genres = fields.genre.split(",")
+        genres.map((item, i) => {
+            product.genre = product.genre.concat({item})
+        })
+        
         if (file.photo) {
             if (file.photo.size > 4000000) {
                 return res.status(400).json({err: "Image size cannot be more than 4Mb"})
@@ -74,7 +80,7 @@ exports.updateProduct = (req, res) => {
             if (err) {
                 return res.status(400).json({err})
             }
-            res.status(200).json({product})
+            res.status(200).json({success: true})
         })
 
     })

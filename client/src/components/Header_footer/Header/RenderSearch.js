@@ -8,7 +8,7 @@ export default function RenderSearch(props) {
         try {
             return (props.items.length !== 0 ?
                 props.items.map((item, i) => (
-                    <Link to={`/shop/${item._id}`} key={i}>
+                    <Link to={`/shop/${item._id}`} key={i} onClick={props.handleSearchClick}>
                         <div className="search_item_b" key={i}>
                             <div className="search_photo_block"><img src={`http://localhost:3000/api/photo/${item._id}`} alt={item.name} className="photo_search"/></div>
                             

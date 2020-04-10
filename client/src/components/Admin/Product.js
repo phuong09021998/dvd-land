@@ -1,39 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import UserLayout from '../../hoc/UserLayout'
-import Modal from 'react-modal';
-import FormField from '../utils/Form/FormField'
 import { update, generateData, isFormValid } from '../utils/Form/FormAction'
-import { createProduct } from '../../actions/product_action'
-
+import { createProduct, updateProduct, deleteProduct } from '../../actions/product_action'
+import ProductModal from '../utils/Modal/ProductModal'
+import NontificationModal from '../utils/Modal/NontificationModal'
 import { connect } from 'react-redux'
+import ItemLayout from '../../hoc/ItemLayout'
+import { getProductsToAdmin } from '../../actions/product_action'
+import { Spin } from 'antd'
 
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)',
-    width                 : '800px',
-    height                : '800px'
-  }
-};
 
 function AdminProduct(props) {
 
-    let subtitle
-
-    const [modalIsOpen,setIsOpen] = React.useState(false)
+    const [modalIsOpen, setIsOpen] = React.useState(false)
 
     const originalState = {
             formError: false,
             formMessage: '',
+            isUpdate: false,
             formData: {
                 photo:{
                     element:'input',
                     value:'',
                     photo_data: '',
+                    link: '',
                     config: {
                         name: 'img_input',
                         type: 'file',
@@ -95,7 +85,7 @@ function AdminProduct(props) {
                 genre: {
                     element: 'checkbox',
                     value: [],
-                    data: [],
+                    data: props.genre ? props.genre : [],
                     title: 'Genre',
                     config: {
                         name: 'genre_input',
@@ -110,8 +100,8 @@ function AdminProduct(props) {
                 },
                 country: {
                     element: 'select',
-                    value: '',
-                    data: [],
+                    value: props.country ? props.country[0]._id : '',
+                    data: props.country ? props.country : [],
                     title: 'Select the country:',
                     config :{
                         name: 'country_input',
@@ -188,6 +178,11 @@ function AdminProduct(props) {
         }
 
     const [productForm, setProductForm] = useState(originalState)
+    const [openNontification, setOpenNontification] = useState({
+        open: false,
+        text: ''
+    })
+    const [idUpdate, setIdUpdate] = useState()
 
     useEffect(() => {
         setProductForm({
@@ -207,17 +202,15 @@ function AdminProduct(props) {
         })
     }, [props.genre, props.country])
 
-    console.log(productForm)
-
+    useEffect(() => {
+        props.dispatch(getProductsToAdmin({key: ''}))
+    }, [])
 
     function openModal() {
+        setProductForm(originalState)
         setIsOpen(true);
     }
 
-    function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = '#f00'
-    }
     
     function closeModal(){
         setIsOpen(false);
@@ -228,7 +221,6 @@ function AdminProduct(props) {
     const updateForm = (element) => {
         
         const newFormData = update(element, productForm.formData, 'edit_product')
-        
         setProductForm({
             ...productForm,
             formData: newFormData,
@@ -243,12 +235,30 @@ function AdminProduct(props) {
 
         let dataToSubmit = generateData(productForm.formData, 'edit_product')
         let formIsValid = isFormValid(productForm.formData, 'edit_product')
+        
 
         if (formIsValid) {
-            props.dispatch(createProduct(dataToSubmit)).then(response =>{
-                closeModal()
-                alert('Product has been created successfully')
-            })
+            console.log(dataToSubmit)
+            if (productForm.isUpdate) {
+                props.dispatch(updateProduct(dataToSubmit, idUpdate)).then(res => {
+                    closeModal()
+                    setOpenNontification({
+                        open: true,
+                        text: 'Product has been updated'
+                    })
+                    props.dispatch(getProductsToAdmin({key: ''}))
+                })
+            } else {
+                props.dispatch(createProduct(dataToSubmit)).then(response =>{
+                    closeModal()
+                    setOpenNontification({
+                        open: true,
+                        text: 'Product has been created'
+                    })
+                    props.dispatch(getProductsToAdmin({key: ''}))
+                })
+            }
+           
         } else {
             setProductForm({
                 ...productForm,
@@ -258,91 +268,138 @@ function AdminProduct(props) {
         }
     }
 
-    console.log(productForm)
+    const handleSearch = (e) => {
+        props.dispatch(getProductsToAdmin({key: e.target.value}))
+    }
+
+    const handleUpdateProduct = async (id, key) => {
+        let newGenre = []
+        const product = props.productAdmin[key]
+
+
+
+        product.genre.map((item, i) => {
+            newGenre.push(item.item._id)
+        })
+
+        await setProductForm({
+            ...productForm,
+            isUpdate: true,
+            formData: {
+                ...productForm.formData,
+                photo: {
+                    ...productForm.formData.photo,
+                    photo_data: `/api/photo/${id}`,
+                    valid: true
+                },
+                genre: {
+                    ...productForm.formData.genre,
+                    value: newGenre,
+                    valid: true
+                },
+                country: {
+                    ...productForm.formData.country,
+                    value: product.country._id,
+                    valid: true
+                },
+                name: {
+                    ...productForm.formData.name,
+                    value: product.name,
+                    valid: true
+                },
+                year: {
+                    ...productForm.formData.year,
+                    value: product.year,
+                    valid: true
+                },
+                description: {
+                    ...productForm.formData.description,
+                    value: product.description,
+                    valid: true
+                },
+                director: {
+                    ...productForm.formData.director,
+                    value: product.director,
+                    valid: true
+                },
+                price: {
+                    ...productForm.formData.price,
+                    value: product.price,
+                    valid: true
+                },
+                fixed_price: {
+                    ...productForm.formData.fixed_price,
+                    value: product.fixed_price,
+                    valid: true
+                },
+                trailer: {
+                    ...productForm.formData.trailer,
+                    value: product.trailer,
+                    valid: true
+                }
+            }
+        })
+        setIdUpdate(id)
+        setIsOpen(true)
+    }
+
+    const handleDeleteProduct = (id, key) => {
+        props.dispatch(deleteProduct(id)).then(res => {
+            props.dispatch(getProductsToAdmin({key: ''}))
+        })
+       
+    }
+
+    const closeNontification = () => {
+        setOpenNontification({
+            open: false,
+            text: ''
+        })
+    }
+
     return (
         <UserLayout {...props}>
             <div className="top_control">
                 <div className="search_area">
-                    
+                    <input type="text" onChange={e => handleSearch(e)} className="search_admin" placeholder="Searching..."/>
                 </div>
                 <button className="add_button" onClick={openModal}><i class="fas fa-plus" id="plus"></i></button>
             </div>
             <div className="admin_content">
-                
-            </div>
-            <Modal
-                isOpen={modalIsOpen}
-                onAfterOpen={afterOpenModal}
-                onRequestClose={closeModal}
-                style={customStyles}
-                contentLabel="Example Modal"
-                shouldCloseOnOverlayClick={false}
-            >
-        
-                <h2 ref={_subtitle => (subtitle = _subtitle)} className="form_title">Edit Product</h2>
-                <button onClick={closeModal} className="close_modal"><i class="far fa-window-close" id="close"></i></button>
-                <form type="POST" onSubmit={e => handleFormSubmit(e)}>
-                    <FormField 
-                        id={'photo'}
-                        formdata={productForm.formData.photo}
-                        change={(element) => updateForm(element)}
+                {props.productAdmin ? 
+                    props.productAdmin.map((item, i) => (
+                        <ItemLayout
+                        key={i}
+                        order={i}
+                        name={`${item.name} (${item.year})`}
+                        id={item._id}
+                        update={handleUpdateProduct}
+                        delete={handleDeleteProduct}
+                        product={true}
                     />
-                    <FormField 
-                        id={'name'}
-                        formdata={productForm.formData.name}
-                        change={(element) => updateForm(element)}
-                    />
-                    <FormField 
-                        id={'year'}
-                        formdata={productForm.formData.year}
-                        change={(element) => updateForm(element)}
-                    />
-
-                    {props.genre ? 
-                        <FormField 
-                            id={'genre'}
-                            formdata={productForm.formData.genre}
-                            change={(element) => updateForm(element)}
-                        />
-                    : null}
-
-                    {props.country ? 
-                        <FormField 
-                            id={'country'}
-                            formdata={productForm.formData.country}
-                            change={(element) => updateForm(element)}
-                        />
-                    : null}
+                    )) 
                     
-                    <FormField 
-                        id={'director'}
-                        formdata={productForm.formData.director}
-                        change={(element) => updateForm(element)}
-                    />
-                     <FormField 
-                        id={'description'}
-                        formdata={productForm.formData.description}
-                        change={(element) => updateForm(element)}
-                    />
-                    <FormField 
-                        id={'price'}
-                        formdata={productForm.formData.price}
-                        change={(element) => updateForm(element)}
-                    />
-                    <FormField 
-                        id={'fixed_price'}
-                        formdata={productForm.formData.fixed_price}
-                        change={(element) => updateForm(element)}
-                    />
-                    <FormField 
-                        id={'trailer'}
-                        formdata={productForm.formData.trailer}
-                        change={(element) => updateForm(element)}
-                    />
-                    <div className={`${productForm.formError ? "form_message" : "form_message form_success" }`}>{productForm.formMessage}</div>
-                    <button onClick={e => handleFormSubmit(e)} className="button_edit_form">Submit</button>
-                </form>
-            </Modal>
+                : <Spin className="loading_spin" style={{marginTop: '20px'}}/>}
+            </div>
+            <ProductModal 
+                productForm={productForm}
+                open={modalIsOpen}
+                closeModal={closeModal}
+                change={element => updateForm(element)}
+                submit={e => handleFormSubmit(e)}
+                genre={props.genre}
+                country={props.country}
+                
+            />
+            {openNontification.open ? 
+                <NontificationModal
+                    open={openNontification.open}
+                    title={openNontification.text}
+                    close={closeNontification}
+                /> 
+            :null}
+            
+            
         </UserLayout>
     )
 }
@@ -350,7 +407,8 @@ function AdminProduct(props) {
 const mapStateToProps = (state) => {
     return {
         genre: state.genre.genres,
-        country: state.country.countries
+        country: state.country.countries,
+        productAdmin: state.product.productAdmin
     }
 }
 

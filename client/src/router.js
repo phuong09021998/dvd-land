@@ -10,11 +10,15 @@ import { connect } from 'react-redux'
 import { getUser } from './actions/user_actions'
 import UserDashBoard from './components/User/index'
 import AdminProduct from './components/Admin/Product'
-import SearchResult from './components/Search'
 import Shop from './components/Shop'
 import ProductDetail from './components/ProductDetail'
 import { LastLocationProvider } from 'react-router-last-location'
 import ScrollTop from './components/utils/ScrollTop'
+import AdminGenre from './components/Admin/Genre'
+import AdminCountry from './components/Admin/Country'
+import AdminUser from './components/Admin/User'
+import Cart from './components/Cart'
+import Checkout from './components/Checkout'
 
 function Routes(props) {
   useEffect(() => {
@@ -28,13 +32,17 @@ function Routes(props) {
       <Switch>
       <LastLocationProvider>
         <ScrollTop>
-        <AdminRoute {...props} path="/admin/product" component={AdminProduct}/>
-        <PrivateRoute {...props} path="/user/dashboard" component={UserDashBoard}/>
-        <PublicRoute {...props} restricted={true} path='/register_login' exact component={LoginRegister}/>
-        <PublicRoute path='/' exact component={Home} {...props}/>
-        <PublicRoute {...props} exact component={SearchResult} path='/search'/>
-        <PublicRoute {...props} exact component={Shop} path='/shop'/>
-        <PublicRoute {...props} exact component={ProductDetail} path='/shop/:id'/>
+          <AdminRoute {...props} path="/admin/user" component={AdminUser}/>
+          <AdminRoute {...props} path="/admin/country" component={AdminCountry}/>
+          <AdminRoute {...props} path="/admin/genre" component={AdminGenre}/>
+          <AdminRoute {...props} path="/admin/product" component={AdminProduct}/>
+          <PrivateRoute {...props} path="/user/dashboard" component={UserDashBoard}/>
+          <PrivateRoute {...props} restricted={true} path='/checkout' exact component={Checkout}/>
+          <PublicRoute {...props} restricted={true} path='/register_login' exact component={LoginRegister}/>
+          <PublicRoute path='/' exact component={Home} {...props}/>
+          <PublicRoute {...props} exact component={Shop} path='/shop'/>
+          <PublicRoute {...props} exact component={ProductDetail} path='/shop/:id'/>
+          <PublicRoute {...props} exact component={Cart} path='/cart'/>
         </ScrollTop>
       </LastLocationProvider>
       </Switch>

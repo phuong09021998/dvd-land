@@ -92,7 +92,7 @@ export const update = (element, formData, formName) => {
 
     
 
-    if (element.blur || element.id === 'photo' || element.id === 'genre') {
+    if (element.blur || element.id === 'photo' || element.id === 'genre' || element.id === 'confirmPassword') {
         let validData = validate(newElement, formData)
         newElement.valid = validData[0]
         newElement.validationMessage = validData[1]
@@ -108,13 +108,13 @@ export const generateData = (formData, formName) => {
     let dataToSubmit = {}
 
     for (let key in formData) {
-        if (key !== 'confirmPassword') {
+        if (key !== 'confirmPassword' && key !=='photo' && formData[key].value) {
             dataToSubmit[key] = formData[key].value
         }
-        if (dataToSubmit.photo) {
+        
+        if (formData.photo_data && typeof formData.photo.photo_data === 'object') {
             dataToSubmit.photo = formData.photo.photo_data
         }
-        
     }
 
     return dataToSubmit

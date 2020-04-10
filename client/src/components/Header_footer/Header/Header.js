@@ -19,7 +19,9 @@ function Header(props) {
         },
         {
             icon: <i class="fas fa-shopping-cart"></i>,
-            link: 'cart'
+            link: '/cart',
+            hover: true,
+            cart: true
         },
         {
             icon: <i class="fas fa-user"></i>,
@@ -37,7 +39,9 @@ function Header(props) {
         },
         {
             icon: <i class="fas fa-shopping-cart"></i>,
-            link: 'cart'
+            link: '/cart',
+            hover: true,
+            cart: true
         },
         {
             icon: <i class="far fa-user"></i>,
@@ -101,7 +105,7 @@ function Header(props) {
                 setLoadingSearch(false)
             })
         } else {
-            props.dispatch(removeSearch())
+            props.dispatch(removeSearch('header'))
         }
         
         
@@ -130,6 +134,13 @@ function Header(props) {
         
     }
 
+    const handleSearchClick = () => {
+        setSearchValue({
+            ...searchValue,
+            key: ''
+        })
+        inputRef.current.blur()
+    }
 
     return (
         <header>
@@ -151,7 +162,7 @@ function Header(props) {
                             </select>
                             <div className="input_wrapp">
                                 <input type="text" onChange={e => handleSearchInput(e)} className="input_search" placeholder="I'm searching for..." value={searchValue.key} ref={inputRef}/>
-                                {searchValue.key ?<RenderSearch items={props.search} loading={loadingSearch}/> : null}
+                                {searchValue.key ?<RenderSearch items={props.search} loading={loadingSearch} handleSearchClick={handleSearchClick}/> : null}
                             </div>
                             
                             <button onClick={e => handleSubmit(e)} className="button_search">Search</button>
@@ -162,6 +173,7 @@ function Header(props) {
                 <div className="item_wrapp">
                     <Items 
                         data={props.user ? listItemUser : listItem}
+                        user={props.user}
                     />
                 </div>
             </div>

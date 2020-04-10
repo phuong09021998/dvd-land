@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const { ObjectId } = mongoose.Schema
+const _ = require('lodash')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -33,24 +35,33 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 6
     },
-    history: {
-        type: Array,
-        default: []
-    },
-    cart: {
-        type: Array,
-        default: []
-    },
+    history: [{
+        quantity: {
+            type: Number
+        },
+        item: {
+            type: ObjectId,
+            require: true,
+            ref: 'Product'
+        }
+    }],
+    cart:[{
+        quantity: {
+            type: Number
+        },
+        item: {
+            type: ObjectId,
+            require: true,
+            ref: 'Product'
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now()
+        }
+    }],
     role: {
         type: Number,
         default: 0
-    },
-    age: {
-        type: Number,
-        default: 0,
-    },
-    gender: {
-        type: Boolean,
     },
     address: {
         type: String,
@@ -96,12 +107,26 @@ userSchema.methods.generateToken = function (cb) {
 
 userSchema.statics.findByToken = function (token, cb) {
     jwt.verify(token, process.env.SECRET, (err, decode) => {
-        User.findOne({_id: decode, token: token}, (err, user) => {
+        User.findOne({_id: decode, token: token})
+        .populate({
+            path: 'cart.item',
+            model: 'Product',
+            select: 'name year fixed_price price'
+        })
+        .exec((err, user) => {
+            
+            
             if (err) {
                 cb(err)
             }
+
+            if (user) {
+                user.cart = _.sortBy(user.cart, 'createdAt').reverse()
+            }
+     
             cb(undefined, user)
         })
+
     })
 }
 

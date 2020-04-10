@@ -1,8 +1,52 @@
-import React from 'react'
+import React, { createRef } from 'react'
 import { Tooltip } from 'antd'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { addToCart, getCartItems } from '../../../actions/user_actions'
+import { openNotification } from '../../utils/misc'
+import { productFromLocalStorage } from '../../../actions/product_action'
+import ls from 'local-storage'
 
-export default function index(props) {
+function Card(props) {
+
+    const handleAddToCart = (e) => {
+        e.preventDefault()
+        if (props.user) {
+            props.dispatch(addToCart(null, props._id)).then(res => {
+                props.dispatch(getCartItems())
+                openNotification()
+            })
+        } else {
+            let cart = ls('cart')
+            if (cart !== null) {
+                const dataToSave = {
+                    id: props._id,
+                    quantity: 1
+                }
+                let newCart = cart
+                let dupItem = newCart.findIndex(item => item.id === props._id)
+                if (dupItem !== -1) {
+                    newCart[dupItem] = {
+                        id: props._id,
+                        quantity: newCart[dupItem].quantity + 1
+                    }
+                } else {
+                    newCart = newCart.concat(dataToSave)
+                }
+                ls('cart', newCart)
+            } else {
+                const dataToSave = [{
+                    id: props._id,
+                    quantity: 1
+                }]
+                ls('cart', dataToSave)
+            }
+            props.dispatch(productFromLocalStorage())
+            openNotification()
+        }
+        
+    }
+
     return (
         <div className="carousel_block" style={props.style ? props.style : null}>
             <div className="top_block">
@@ -11,7 +55,7 @@ export default function index(props) {
                     <div className="icon_wrapp">
                         <div className="one_icon">
                             <Tooltip placement="topLeft" title="Add to cart">
-                                <button className="carousel_button"><i class="fas fa-shopping-cart carousel_icon"></i></button>
+                                <button className="carousel_button" onClick={e => handleAddToCart(e)}><i class="fas fa-shopping-cart carousel_icon"></i></button>
                             </Tooltip>
                         
                         </div>
@@ -45,3 +89,12 @@ export default function index(props) {
         </div>
     )
 }
+
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.user.user
+    }
+}
+
+export default connect(mapStateToProps)(Card)

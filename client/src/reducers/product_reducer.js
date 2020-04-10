@@ -1,7 +1,7 @@
 export default function (state={}, action) {
     switch (action.type) {
         case 'create_product':
-            return {...state, ...action.payload}
+            return {...state, success: true}
         case 'get_products':
             return {...state, products: action.payload}
         case 'get_new_arrivals':
@@ -13,13 +13,28 @@ export default function (state={}, action) {
         case 'search_product':
             return {...state, search: action.payload}
         case 'remove_search':
-            return {...state, search: null, toShop: null}
+            if (action.from === 'header') {
+                return {...state, search: null}
+            } else {
+                return {...state, toShop: null}
+            }
+            
         case 'search_product_page':
             return {...state, searchPage: action.payload}
         case 'product_to_shop':
             return {...state, toShop: action.payload.articles}
         case 'by_id':
             return {...state, byId: action.payload}
+        case 'product_to_admin' :
+            return {...state, productAdmin: action.payload}
+        case 'update_product':
+            return {...state, success: true}
+        case 'delete_product':
+            return {...state, success: true}
+        case 'local_storage':
+            return {...state, localStorage: action.payload}
+        case 'remove_storage':
+            return {...state, localStorage: null}
         default:
             return state
     }

@@ -28,9 +28,7 @@ exports.getUsers = (req, res) => {
     let skip = req.query.skip ? parseInt(req.query.skip) : 0
 
     User.find()
-        .select('-photo')
         .populate('history')
-        .populate('wishList')
         .populate('cart')
         .skip(skip)
         .sort([[sortBy, order]])
@@ -42,6 +40,29 @@ exports.getUsers = (req, res) => {
     
             res.status(200).json({users})
         }) 
+
+}
+
+exports.userSearch = (req, res) => {
+    let order = req.query.order ? req.query.order : 'desc'
+    let sortBy = req.query.sortBy ? req.query.sortBy : 'email'
+    let limit = req.query.limit ? parseInt(req.query.limit) : 9999
+    let findArgs = {}
+
+    findArgs.email = {$regex: req.body.email, $options: 'i'}
+
+    User.find(findArgs)
+    .populate('history')
+    .populate('cart')
+    .sort([[sortBy, order]])
+    .limit(limit)
+    .exec((err, users) => {
+        if (err) {
+            return res.status(400).json({err})
+        }
+
+        res.status(200).json({users})
+    }) 
 
 }
 

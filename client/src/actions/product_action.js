@@ -1,4 +1,5 @@
 import axios from 'axios'
+import ls from 'local-storage'
 
 export const createProduct = (dataToSubmit) => {
     let bodyFormData = new FormData()
@@ -73,10 +74,10 @@ export const searchProduct = (dataToSubmit) => {
         }
 }
 
-export const removeSearch = () => {
+export const removeSearch = (from) => {
     return {
         type: 'remove_search',
-        payload: null
+        from
     }
 }
 
@@ -120,3 +121,67 @@ export const getProductById = (id) => {
         }
 }
 
+export function getProductsToAdmin(dataToSubmit){
+    const request = axios.post(`/api/product/search?limit=9999&sortBy=name&order=asc`, dataToSubmit)
+                .then(res => res.data)
+
+    return {
+        type: 'product_to_admin',
+        payload: request
+    }
+
+}
+
+export const updateProduct = (dataToSubmit, id) => {
+
+    let bodyFormData = new FormData()
+    for (let key in dataToSubmit) {
+        if (key !== 'photo') {
+            bodyFormData.set(key, dataToSubmit[key])
+        } else {
+            bodyFormData.append(key, dataToSubmit[key])
+        }
+    }
+    const request = axios({
+        method: 'patch',
+        url: `/api/admin/product/update/${id}`,
+        data: bodyFormData,
+        headers: {'Content-Type': 'multipart/form-data' }
+    }).then(res => res.data).catch(err => console.log(err.response))
+    
+    return {
+        type: 'update_product',
+        payload: request
+    }
+}
+
+export function deleteProduct(id){
+    const request = axios.delete(`/api/admin/product/${id}`)
+                .then(res => res.data)
+
+    return {
+        type: 'delete_product',
+        payload: request
+    }
+
+}
+
+export const productFromLocalStorage = () => {
+    const cart = ls('cart')
+    const dataToSubmit = {
+        cart: cart
+    }
+    const  request = axios.post('/api/user/productfromcart', dataToSubmit).then(res => res.data)
+
+    return {
+        type: 'local_storage',
+        payload: request
+    }
+}
+
+export const removeCartItems = () => {
+    return {
+        type: 'remove_storage',
+        payload: null
+    }
+}

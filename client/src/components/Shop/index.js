@@ -98,7 +98,7 @@ function Shop(props) {
         e.preventDefault()
 
         setDataToSubmit(generateData(shopForm.formData, 'shop'))
-        props.dispatch(removeSearch())
+        props.dispatch(removeSearch('shop'))
         if (boxview) {
             setLoadMore({
                 skip: 0,
@@ -187,7 +187,7 @@ function Shop(props) {
     }
 
     useEffect(() => {
-        props.dispatch(removeSearch())
+        props.dispatch(removeSearch('shop'))
         if (boxview) {
             setLoadMore({
                 skip: 0,
