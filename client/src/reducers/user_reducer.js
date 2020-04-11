@@ -17,6 +17,18 @@ export default function (state={}, action) {
             return {...state, cartItem: action.payload}
         case 'remove_cart':
             return {...state, cartItem: null}
+        case 'success_buy':
+            return {
+                ...state,
+                successBuy: action.payload.success,
+                user:{
+                    ...state.user,
+                    cart: action.payload.cart
+                },
+                cartItem: []
+            }
+        case 'update_user':
+            return {...state, ...action.payload}
         default:
             return state
     }

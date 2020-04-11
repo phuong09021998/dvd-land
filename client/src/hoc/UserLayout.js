@@ -17,10 +17,6 @@ function UserDashBoard(props) {
         {
             name: 'Edit Account',
             to: '/user/setting'
-        },
-        {
-            name: 'Address',
-            to: '/user/address'
         }
     ]
 
@@ -77,28 +73,36 @@ function UserDashBoard(props) {
        </>
     )
 
+    const renderUserLayout = () => {
+        if (props.user) {
+            return (
+                <div className="container fixed_container">
+                    <div className="dashboard_title">My Account</div>
+                    <Row gutter={16}>
+                        <Col className="dashboard_left" sm={6}>
+                            <div className="user_avatar">
+                                <i class="fas fa-user-circle" id="dashboard_avatar"></i>
+                                <div className="avatar_text">
+                                    <p className="hello">Hello!</p>
+                                    <p className="avatar_title">{props.user.name}</p>
+                                </div>
+                            </div>
+                            <div className="left_menu">
+                                {generateLink(link)}
+                            </div>
+                            {props.user.role === 1 ? showAdminMenu(adminLink) : null}
+                        </Col>
+                        <Col className="dashboard_right" sm={18}>
+                            {props.children}
+                        </Col>
+                    </Row>
+                </div>
+            )
+        }
+    }
+
     return (
-        <div className="container fixed_container">
-            <div className="dashboard_title">My Account</div>
-            <Row gutter={16}>
-                <Col className="dashboard_left" sm={6}>
-                    <div className="user_avatar">
-                        <i class="fas fa-user-circle" id="dashboard_avatar"></i>
-                        <div className="avatar_text">
-                            <p className="hello">Hello!</p>
-                            <p className="avatar_title">{props.user.name}</p>
-                        </div>
-                    </div>
-                    <div className="left_menu">
-                        {generateLink(link)}
-                    </div>
-                    {props.user.role === 1 ? showAdminMenu(adminLink) : null}
-                </Col>
-                <Col className="dashboard_right" sm={18}>
-                    {props.children}
-                </Col>
-            </Row>
-        </div>
+        renderUserLayout()
     )
 }
 

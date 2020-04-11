@@ -35,16 +35,10 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 6
     },
-    history: [{
-        quantity: {
-            type: Number
-        },
-        item: {
-            type: ObjectId,
-            require: true,
-            ref: 'Product'
-        }
-    }],
+    history: {
+        type: Array,
+        default: []
+    },
     cart:[{
         quantity: {
             type: Number
@@ -68,6 +62,9 @@ const userSchema = new mongoose.Schema({
     },
     token: {
         type: String,
+    },
+    phone: {
+        type: Number
     }
 }, {
     timestamps: true

@@ -5,8 +5,15 @@ import { update, generateData, isFormValid } from '../utils/Form/FormAction'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Spin } from 'antd'
+import { onSuccessBuy, upDateUser } from '../../actions/user_actions'
+
+
 
 function Checkout(props) {
+
+
+
+    const [showPaypal, setShowPaypal] = useState(false)
 
     const [checkoutForm, setcheckoutForm] = useState({
         formError: false,
@@ -107,8 +114,19 @@ function Checkout(props) {
 
     const updateForm = (element) => {
         
-        const newFormData = update(element, checkoutForm.formData, 'register')
-
+        const newFormData = update(element, checkoutForm.formData, 'checkout')
+        
+        if (element.blur) {
+            let formIsValid = isFormValid(newFormData, 'checkout')
+            if (formIsValid) {
+                setShowPaypal(true)
+            } else {
+                setShowPaypal(false)
+            }
+        }
+       
+        
+    
         
         setcheckoutForm({
             ...checkoutForm,
@@ -118,16 +136,16 @@ function Checkout(props) {
 
     }
 
-    const handleRegisterSubmit = (e) => {
+    const handleSubmit = (e) => {
         // inputRef.current.blur()
         e.preventDefault()
 
-        let dataToSubmit = generateData(checkoutForm.formData, 'register')
-        let formIsValid = isFormValid(checkoutForm.formData, 'register')
+        let dataToSubmit = generateData(checkoutForm.formData, 'checkout')
+        let formIsValid = isFormValid(checkoutForm.formData, 'checkout')
         console.log(checkoutForm.formData)
         if (formIsValid) {
             
-    
+            
             
         } else {
             setcheckoutForm({
@@ -174,10 +192,33 @@ function Checkout(props) {
         }
     }, [props.user])
 
+    useEffect(() => {
+        let formIsValid = isFormValid(checkoutForm.formData, 'checkout')
+        if (formIsValid) {
+            setShowPaypal(true)
+        }
+    }, [checkoutForm])
+
+    const transactionSuccess = (data) => {
+
+        props.dispatch(onSuccessBuy({
+            cartDetail: props.cartItem.cartItems,
+            paymentData: data
+        })).then((res)=>{
+            let dataToSubmit = generateData(checkoutForm.formData, 'checkout')
+            props.dispatch(upDateUser(dataToSubmit))
+            props.history.push('/checkout/success')
+            
+
+        })
+
+    }
+
+
     const renderCheckout = () => {
-        if (props.cartItem && props.cartItem.cartItems.length) {
+        if (props.cartItem && props.cartItem.cartItems && props.cartItem.cartItems.length) {
             return (
-                <form type="POST" onSubmit={e => handleRegisterSubmit(e)}>
+                <form type="POST" >
                     <div className="checkout_wrapp">
                         
                         <div className="left_checkout">
@@ -190,12 +231,16 @@ function Checkout(props) {
                         <div className="right_checkout">
                             <RightCheckout
                                 products={props.cartItem ? props.cartItem.cartItems : null}
+                                show={showPaypal}
+                                handleSubmit={e => handleSubmit(e)}
+                                user={props.user}
+                                transactionSuccess={data => transactionSuccess(data)}
                             />
                         </div>
                     </div>
                 </form>
             )
-        } else if (props.cartItem && !props.cartItem.cartItems.length){
+        } else if (props.cartItem && props.cartItem.cartItems && !props.cartItem.cartItems.length){
             return (
                 <>
                 <div className="render_empty_wrapp">
@@ -212,7 +257,8 @@ function Checkout(props) {
             )
         }
     }
-    
+
+
     return (
         <div className="container" style={{marginBottom: '50px'}}>
             <div className="login_title" style={{color: 'black'}}>Checkout</div>

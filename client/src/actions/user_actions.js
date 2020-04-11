@@ -81,3 +81,25 @@ export const removeCartItemState = (id) => {
     }
 }
 
+
+export const onSuccessBuy = (data) => { 
+
+    const request = axios.post('/api/user/success', data)
+                    .then(response => response.data)
+                    .catch(err => console.log(err.response))
+
+    return {
+        type: 'success_buy',
+        payload: request
+    }
+}
+
+
+export const upDateUser = (dataToSubmit) => {
+    const request = axios.patch(`/api/user/update`, dataToSubmit)
+        .then(res => res.data)
+        return {
+            type: 'update_user',
+            payload: request
+        }
+}

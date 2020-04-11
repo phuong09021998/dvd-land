@@ -19,6 +19,8 @@ import AdminCountry from './components/Admin/Country'
 import AdminUser from './components/Admin/User'
 import Cart from './components/Cart'
 import Checkout from './components/Checkout'
+import SuccessBuy from './components/Checkout/Success'
+import UserHistory from './components/User/History'
 
 function Routes(props) {
   useEffect(() => {
@@ -37,7 +39,9 @@ function Routes(props) {
           <AdminRoute {...props} path="/admin/genre" component={AdminGenre}/>
           <AdminRoute {...props} path="/admin/product" component={AdminProduct}/>
           <PrivateRoute {...props} path="/user/dashboard" component={UserDashBoard}/>
-          <PrivateRoute {...props} restricted={true} path='/checkout' exact component={Checkout}/>
+          <PrivateRoute {...props} path="/user/order" component={UserHistory}/>
+          <PrivateRoute {...props} path='/checkout' exact component={Checkout}/>
+          <PrivateRoute {...props} path='/checkout/success' exact component={SuccessBuy}/>
           <PublicRoute {...props} restricted={true} path='/register_login' exact component={LoginRegister}/>
           <PublicRoute path='/' exact component={Home} {...props}/>
           <PublicRoute {...props} exact component={Shop} path='/shop'/>
