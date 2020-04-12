@@ -18,7 +18,7 @@ const paymentRouter = require('./routes/payment')
 const app = express()
 
 // Db
-mongoose.connect(process.env.DATABASE, {
+mongoose.connect(process.env.MONGODB_URI, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -30,6 +30,7 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(morgan('dev'))
 app.use(cors())
+app.use(express.static('client/build'))
 
 // Routes middlewares
 app.use('/api', adminRoutes)
@@ -38,6 +39,14 @@ app.use('/api', productRoutes)
 app.use('/api', genreRoutes)
 app.use('/api', countryRouter)
 app.use('/api', paymentRouter)
+
+// DEFAULT
+if (process.env.NODE_ENV === 'production') {
+    const path = require('path')
+    app.get('/*', (req, res) => {
+        res.sendFile(path.resolve(__dirname), '../client', 'build', 'index.html')
+    })
+}
 
 
 // Listen
