@@ -1978,8 +1978,9 @@ input:-webkit-autofill:active  {
 
 .history_table{
     width: 100%;
-    background-color: lightblue;
+    margin-left: 30px;
     position: relative;
+    color: black;
 }
 
 table, th, td {
@@ -1989,6 +1990,7 @@ table, th, td {
 th{
     text-align: center;
     font-size: 16px;
+    background-color: #fcb800;
 }
 
 td {
@@ -2012,4 +2014,49 @@ td {
 .day_purchase{
     width: 20%;
 
+}
+
+.update_button{
+    font-size: 20px;
+    color: black;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fcb800;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 50px;
+}
+
+.right_dashboard_wrapp{
+    margin-left: 40px;
+    transform: translateY(-30px);
+    color: black;
+}
+
+.error_label_update{
+    font-size: 20px;
+    font-weight: bold;
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+    
+}
+.success_label_update{
+    font-size: 20px;
+    font-weight: bold;
+    color: #690;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.list_order_title{
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    margin-bottom: 20px;
 }

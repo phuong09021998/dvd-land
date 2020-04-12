@@ -21,7 +21,7 @@ exports.createUser = (req, res) => {
             return res.status(400).json({err})
         }
 
-        user.password = undefined
+
         res.cookie('c_auth', user.token).status(200).json({user})
     })
 }
@@ -56,15 +56,53 @@ exports.loginUser = (req, res) => {
 
 
 exports.updateUser = (req, res) => {
-    User.findOneAndUpdate({_id: req.user._id}, req.body, {new: true} ,(err, user) => {
-        if (err || !user) {
-            res.status(400).json({
-                err: 'User cannot be found'
-            })
-        }
 
-        res.status(200).json({user})
-    })
+    // bcrypt.hash(this.password, 8, (err, hash) => {
+    //     if (err) {
+    //         throw new Error('Something went wrong')
+    //     }
+
+    //     user.password = hash
+    //     next()
+    // })
+    let newUser = req.body
+    if (newUser.password) { 
+        bcrypt.hash(newUser.password, 8, (err, hash) => {
+            if (err) {
+                throw new Error('Something went wrong')
+            }
+    
+            newUser.password = hash
+            User.findOneAndUpdate(
+                { _id: req.user._id },
+                {
+                    "$set": newUser
+                },
+                { new: true },
+                (err,doc)=>{
+                    if(err) return res.json({success:false,err});
+                    return res.status(200).send({
+                        doc
+                    })
+                }
+            );
+        })
+    } else {
+        User.findOneAndUpdate(
+            { _id: req.user._id },
+            {
+                "$set": req.body
+            },
+            { new: true },
+            (err,doc)=>{
+                if(err) return res.json({success:false,err});
+                return res.status(200).send({
+                    success:true
+                })
+            }
+        );
+    }
+  
 }
 
 exports.deleteUser = (req, res) => {

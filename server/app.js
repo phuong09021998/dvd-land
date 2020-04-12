@@ -12,6 +12,7 @@ const userRoutes = require('./routes/user')
 const productRoutes = require('./routes/product')
 const genreRoutes = require('./routes/genre')
 const countryRouter = require('./routes/country')
+const paymentRouter = require('./routes/payment')
 
 // App
 const app = express()
@@ -36,6 +37,7 @@ app.use('/api', userRoutes)
 app.use('/api', productRoutes)
 app.use('/api', genreRoutes)
 app.use('/api', countryRouter)
+app.use('/api', paymentRouter)
 
 
 // Listen

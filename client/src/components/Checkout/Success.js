@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SuccessImg from '../../Resources/images/success.gif'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { getUser } from '../../actions/user_actions'
 
-export default function Success() {
+function Success(props) {
+    useEffect(() => {
+        props.dispatch(getUser())
+    }, [])
+
     return (
         <div className="container" style={{marginBottom: '50px'}}>
             <div className="login_title" style={{color: 'black'}}>Checkout</div>
@@ -14,3 +20,5 @@ export default function Success() {
         </div>
     )
 }
+
+export default connect()(Success)

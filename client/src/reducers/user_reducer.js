@@ -29,6 +29,8 @@ export default function (state={}, action) {
             }
         case 'update_user':
             return {...state, ...action.payload}
+        case 'get_orders':
+            return {...state, listOrders: action.payload}
         default:
             return state
     }

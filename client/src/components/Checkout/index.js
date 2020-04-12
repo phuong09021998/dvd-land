@@ -206,7 +206,6 @@ function Checkout(props) {
             paymentData: data
         })).then((res)=>{
             let dataToSubmit = generateData(checkoutForm.formData, 'checkout')
-            props.dispatch(upDateUser(dataToSubmit))
             props.history.push('/checkout/success')
             
 

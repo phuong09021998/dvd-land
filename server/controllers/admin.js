@@ -28,7 +28,6 @@ exports.getUsers = (req, res) => {
     let skip = req.query.skip ? parseInt(req.query.skip) : 0
 
     User.find()
-        .populate('history')
         .populate('cart')
         .skip(skip)
         .sort([[sortBy, order]])

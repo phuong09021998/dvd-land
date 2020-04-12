@@ -21,6 +21,7 @@ import Cart from './components/Cart'
 import Checkout from './components/Checkout'
 import SuccessBuy from './components/Checkout/Success'
 import UserHistory from './components/User/History'
+import UserSetting from './components/User/Setting'
 
 function Routes(props) {
   useEffect(() => {
@@ -41,6 +42,7 @@ function Routes(props) {
           <PrivateRoute {...props} path="/user/dashboard" component={UserDashBoard}/>
           <PrivateRoute {...props} path="/user/order" component={UserHistory}/>
           <PrivateRoute {...props} path='/checkout' exact component={Checkout}/>
+          <PrivateRoute {...props} path='/user/setting' exact component={UserSetting}/>
           <PrivateRoute {...props} path='/checkout/success' exact component={SuccessBuy}/>
           <PublicRoute {...props} restricted={true} path='/register_login' exact component={LoginRegister}/>
           <PublicRoute path='/' exact component={Home} {...props}/>

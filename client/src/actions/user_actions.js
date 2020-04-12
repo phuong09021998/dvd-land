@@ -103,3 +103,11 @@ export const upDateUser = (dataToSubmit) => {
             payload: request
         }
 }
+
+export const getOrders = () => {
+    const request = axios.get('/api/payment').then(res => res.data)
+    return {
+        type: 'get_orders',
+        payload: request
+    }
+}

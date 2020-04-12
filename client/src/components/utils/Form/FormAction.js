@@ -126,7 +126,12 @@ export const isFormValid = (formData, formName) => {
 
     for (let key in formData) {
         formIsValid = formData[key].valid && formIsValid
+        if (key === 'confirmPassword') {
+            formIsValid = formData[key].value === formData['password'].value
+        }
     }
+
+   
 
     return formIsValid
 }

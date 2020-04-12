@@ -76,7 +76,7 @@ function UserDashBoard(props) {
     const renderUserLayout = () => {
         if (props.user) {
             return (
-                <div className="container fixed_container">
+                <div className="container">
                     <div className="dashboard_title">My Account</div>
                     <Row gutter={16}>
                         <Col className="dashboard_left" sm={6}>
