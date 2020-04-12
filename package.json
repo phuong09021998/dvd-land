@@ -11,6 +11,9 @@
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
+  "engines": {
+    "node": "13.1.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
